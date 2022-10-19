@@ -1,55 +1,38 @@
-
 import AsyncSelect from "react-select/async";
-import React, { useState } from 'react';
 
-//import Select from 'react-select';
+export default function DataComparison(){
+    const options = [
+       {value: "temp", label: "Temp"},
+       {value: "temp1", label: "Temp1"},
+    ];
 
-
-
-export default function ScenarioStatistics(){
-    const handleOnClick = () => {
-       console.log("Scneario :"+document.querySelector("#mn1").value+" "+document.querySelector("#mn2").value+" "+document.querySelector("#mn3").value+" "+document.querySelector("#mn4").value+"s");
+    const loadOptions = (searchValue, callback) => {
+      setTimeout(()=> {
+        const filterOptions = options.filter(option => 
+            option.label.toLowerCase().includes(searchValue.toLowerCase()));
+            callback(filterOptions);
+      },2000)  
     };
-   
-
-   
-  return (
-    <div>
-    <div className="scenratio_stats"> Scenario Statistics
-    <hr
-        style={{
-        background: 'white',
-        color: 'white',
-        borderColor: 'white',
-        height: '2px',
-        }}/>
-         <div className="dropdowns">
-        <select className="dropdown_s1" id="mn1">
-        <option selected value="a">Scenario A</option>
-        <option value="b">Scenario B</option>
-        <option  value="c">Scenario C</option>
-        </select>
-        <select className="dropdown_s2" id="mn2">
-        <option selected value="fa">Filter A</option>
-        <option value="fb">Filter B</option>
-        <option  value="fc">Filter C</option>
-        </select>
-        
-        <select className="dropdown_s3"  id="mn3">
-        <option selected value="mean">Mean</option>
-        <option value="median">Median</option>
-        <option  value="mode">Mode</option>
-        </select>
-        <select className="dropdown_s4"  id="mn4">
-        <option selected value="LDP">LDP</option>
-        <option value="smth">Something</option>
-        </select>
-        </div>
-        <button onClick={handleOnClick}>Get Stats</button>
-        
-          
-     </div>
-     <table id="table">
+    return (
+        <>
+            <h1 className="datacomp">Data Comparison</h1>
+            <hr></hr>
+            <h1 className="config">Configuration</h1>
+            <hr></hr>
+            <ul className="headers">
+                <li>Date</li>
+                <li>Time</li>
+                <li>Scenario 1</li>
+                <li>Scenario 2</li>
+            </ul>
+            <ul className="dropdowns">
+                <li><AsyncSelect loadOptions={loadOptions} defaultOptions isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions} defaultOptions isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions} defaultOptions isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions} defaultOptions isClearable/></li>
+            </ul>
+            <button className="button">Get Stats</button>
+            <table id="table">
         <tr className="table_row">
           <th>Metric</th>
           
@@ -106,9 +89,7 @@ export default function ScenarioStatistics(){
           <td>10</td>
         </tr>
       </table>
-     </div>
-     
-    
-  );
+        </>
+    );
 
 };
