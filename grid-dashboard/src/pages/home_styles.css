@@ -1,0 +1,65 @@
+/*-------------------------------*/
+/*Home Landing Page*/
+/*-------------------------------*/
+.home {
+	text-align: center;
+	display: center;
+	color: white;
+	font-size: 25px;
+	height: 100%;
+	padding: 90px;
+}
+
+.buttons {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: row;
+	text-align: center;
+}
+
+.home button {
+	background-color: #DBA92A;
+	color: white;
+	text-align: center;
+	font-size: 30px;
+	padding: 35px;
+	margin: 40px;
+	font-weight: bold;
+	border-radius: 15px;
+	align-items: center;
+	justify-content: center;
+}
+
+.descriptions {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: row;
+	text-align: center;
+	font-size: 15px;
+}
+
+.description1 {
+	align-items: center;
+	font-size: 15px;
+	border-radius: 10px;
+	padding: 0px;
+
+}
+
+.description2 {
+	align-items: center;
+	padding: 20px;
+	font-size: 15px;
+	margin: 5px;
+	border-radius: 10px;
+}
+
+.data:hover {
+	background-color: #1CABCB;
+}
+
+.stats:hover {
+	background-color: #1CABCB;
+}
