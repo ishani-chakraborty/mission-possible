@@ -9,6 +9,7 @@
 
 body{
     margin: 0;
+    background-color: #1F3B50
 }
 
 .logo {
@@ -56,4 +57,205 @@ body{
 
 .nav li:hover {
     color: yellow;
+}
+/*-------------------------------*/
+/*Data Comparison*/
+/*-------------------------------*/
+.dropdowns {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    padding: 5px;
+}
+
+.datacomparison {
+    margin: 15px;
+    color: white;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 200;
+}
+
+.datacomparison hr {
+    border: 0;
+    margin: 10px -30px 20px;
+    border-top: 1px solid white;
+}
+.dropdown1 {
+    flex: 1.5; 
+    font-size: 18px;
+    margin: 15px;
+    border-radius: 20px;
+}
+
+.dropdown2 {
+    flex: 1.5;
+    font-size: 18px;
+    margin: 15px;
+    border-radius: 12px;
+}
+
+.dropdown3 {
+    flex: 1.5;
+    font-size: 18px;
+    margin:15px;
+    border-radius: 12px;
+}
+
+.dropdown4 {
+    flex: 1.5;
+    font-size: 18px;
+    margin: 15px;
+    border-radius: 12px;
+}
+
+.datacomparison button  {
+    background-color: #1CABCB;
+    color: white; 
+    text-align: center;
+    font-size: 20px;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 15px;
+}
+/*-------------------------------*/
+/*Home Landing Page*/
+/*-------------------------------*/
+.home {
+    text-align: center;
+    display: center; 
+    color: white;
+    font-size: 25px;
+    height: 100%;
+    padding: 90px;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    text-align: center;
+}
+
+.home button {
+    background-color: #DBA92A;
+    color: white;
+    text-align: center;
+    font-size: 30px;
+    padding: 35px;
+    margin: 40px;
+    font-weight: bold;
+    border-radius: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+.descriptions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    text-align: center;
+    font-size: 15px;
+}
+
+.description1 {
+    align-items: center;
+    font-size: 15px;
+    margin: 5px;
+    border-radius: 10px;
+    padding: 30px;
+   
+}
+
+.description2 {
+     align-items: center;
+    padding: 20px;
+    font-size: 15px;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+.data:hover{
+    background-color: #1CABCB;
+}
+
+.stats:hover {
+    background-color: #1CABCB;
+}
+/*-------------------------------*/
+/*Scenario Stats*/
+/*-------------------------------*/
+
+
+.scenratio_stats {
+    margin: 15px;
+    margin-bottom: 5px;
+    color: white;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 200;
+}
+
+.scenratio_stats hr {
+    border: 0;
+    margin: 10px -30px 20px;
+    border-top: 1px solid white;
+}
+.dropdown_s1 {
+    flex: 1.5; 
+    font-size: 20px;
+    margin: 15px;
+    border-radius: 10px;
+}
+
+.dropdown_s2 {
+    flex: 1.5;
+    font-size: 20px;
+    margin: 15px;
+    border-radius: 10px;
+}
+
+.dropdown_s3 {
+    flex: 1.5;
+    font-size: 20px;
+    margin:15px;
+    border-radius: 10px;
+}
+
+.dropdown_s4 {
+    flex: 1.5;
+    font-size: 20px;
+    margin: 15px;
+    border-radius: 10px;
+}
+
+.scenratio_stats button  {
+    background-color: #1CABCB;
+    color: white; 
+    text-align: center;
+    font-size: 20px;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 15px;
+}
+#table{
+    
+    color: white;
+    text-align: center;
+    font-size: 25px;
+    font-weight: 200;
+    padding: 30 px;
+    
+    margin-top: 1%;
+    margin-left: auto;
+    margin-right: auto;
+    border: 5px solid white;
+    border-collapse: collapse;
+    height: 100%;
+}
+#table tr{
+    border-top: 5px solid white ;
+    border-bottom: 5px solid white ;
 }
