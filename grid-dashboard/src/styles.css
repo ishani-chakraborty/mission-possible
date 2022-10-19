@@ -59,66 +59,6 @@ body{
     color: yellow;
 }
 /*-------------------------------*/
-/*Data Comparison*/
-/*-------------------------------*/
-.dropdowns {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    padding: 5px;
-}
-
-.datacomparison {
-    margin: 15px;
-    color: white;
-    text-align: center;
-    font-size: 25px;
-    font-weight: 200;
-}
-
-.datacomparison hr {
-    border: 0;
-    margin: 10px -30px 20px;
-    border-top: 1px solid white;
-}
-.dropdown1 {
-    flex: 1.5; 
-    font-size: 18px;
-    margin: 15px;
-    border-radius: 20px;
-}
-
-.dropdown2 {
-    flex: 1.5;
-    font-size: 18px;
-    margin: 15px;
-    border-radius: 12px;
-}
-
-.dropdown3 {
-    flex: 1.5;
-    font-size: 18px;
-    margin:15px;
-    border-radius: 12px;
-}
-
-.dropdown4 {
-    flex: 1.5;
-    font-size: 18px;
-    margin: 15px;
-    border-radius: 12px;
-}
-
-.datacomparison button  {
-    background-color: #1CABCB;
-    color: white; 
-    text-align: center;
-    font-size: 20px;
-    padding: 10px;
-    font-weight: bold;
-    border-radius: 15px;
-}
-/*-------------------------------*/
 /*Home Landing Page*/
 /*-------------------------------*/
 .home {
@@ -163,14 +103,13 @@ body{
 .description1 {
     align-items: center;
     font-size: 15px;
-    margin: 5px;
     border-radius: 10px;
-    padding: 30px;
+    padding: 0px;
    
 }
 
 .description2 {
-     align-items: center;
+    align-items: center;
     padding: 20px;
     font-size: 15px;
     margin: 5px;
@@ -185,6 +124,103 @@ body{
     background-color: #1CABCB;
 }
 
+/*-------------------------------*/
+/*Scenario Statistics*/
+/*-------------------------------*/
+.scenariostats {
+    margin: 1rem;
+    color: white;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bolder;
+}
+
+.header {
+    /* display: flex;
+    flex-direction: row; */
+    padding: 0;
+    margin-top: 0.5rem;
+}
+
+.rectangle {
+    display: inline-block;
+    width: 100px;
+    height: 100%;
+    background-color: #DBA92A;
+}
+
+.group1 li{
+    list-style: none;
+    margin-top: 1rem;
+    flex: 1rem; 
+    font-size: 1.25rem;
+    margin-left: 10rem;
+    margin-right: 1rem;
+    border-radius: 1rem;
+    color: white;
+}
+
+.group2 li {
+    list-style: none;
+    margin-top: 1rem;
+    flex: 1rem;
+    font-size: 1.25rem;
+    margin-left: 10rem;
+    margin-right: 1rem;
+    border-radius: 1rem;
+    color: white;
+}
+
+.group3 li {
+    list-style: none;
+    margin-top: 1rem;
+    flex: 1rem;
+    font-size: 1.25rem;
+    margin-left: 10rem;
+    margin-right: 1rem;
+    border-radius: 1rem;
+    color: white;
+}
+
+.group4 li {
+    list-style: none;
+    margin-top: 1rem;
+    flex: 1rem;
+    font-size: 1.25rem;
+    margin-left: 10rem;
+    margin-right: 1rem;
+    border-radius: 1rem;
+    color: white;
+}
+
+.dropdowns {
+    /* display: flex;
+    flex-direction: row; */
+    height: 100%;
+    padding: 5px;
+}
+
+.drops{
+    list-style: none;
+    font-size: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    border-radius: 1rem; 
+}
 
 
+.button {
+    display: flex;
+    background-color: #1CABCB;
+    color: white; 
+    text-align: center;
+    font-size: 1.5rem;
+    padding: 1rem;
+    font-weight: bold;
+    border-radius: 1.5rem;
+    margin: auto;
+    margin-left: 10rem;
+    margin-top: 2rem;
+    align-items: center;
+}
 

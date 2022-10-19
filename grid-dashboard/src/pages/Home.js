@@ -2,9 +2,7 @@ import React from 'react';
 import { useNavigate } from "react-router-dom";
 
 export default function Home(){
-
     const navigate = useNavigate();
-
     const navigateToDataComparison = () => {
         let path = '/dataComparison';
         navigate(path); 
@@ -23,7 +21,7 @@ export default function Home(){
         </div> 
         <div className="descriptions">
             <div className="description1">
-                Graphical comparisons generated from 
+                <strong>Graphical comparisons</strong> generated from 
                 <br></br>
                 node input scenarios that perform 
                 <br></br>
@@ -31,7 +29,7 @@ export default function Home(){
                 <br></br> 
          </div>
           <div className="description2">
-                Exploratory data analysis using   
+                <strong>Exploratory data analysis</strong> using   
                 <br></br>
                 aggregate and target metric filters 
                 <br></br>
