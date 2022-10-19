@@ -26,10 +26,10 @@ export default function DataComparison(){
                 <li>Scenario 2</li>
             </ul>
             <ul className="dropdowns">
-                <li><AsyncSelect loadOptions={loadOptions} defaultOptions isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions} defaultOptions isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions} defaultOptions isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions} defaultOptions isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions} defaultOptions placeholder="- Select -" isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions} defaultOptions placeholder="- Select -" isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions} defaultOptions placeholder="- Select -" isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions} defaultOptions placeholder="- Select -" isClearable/></li>
             </ul>
             <button className="button">Create Graphs</button>
             
