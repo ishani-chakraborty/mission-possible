@@ -21,7 +21,7 @@ export default function Home(){
         </div> 
         <div className="descriptions">
             <div className="description1">
-                <strong>Graphical comparisons</strong> generated from 
+                <b>Graphical comparisons</b> generated from 
                 <br></br>
                 node input scenarios that perform 
                 <br></br>
@@ -29,7 +29,7 @@ export default function Home(){
                 <br></br> 
          </div>
           <div className="description2">
-                <strong>Exploratory data analysis</strong> using   
+                <b>Exploratory data analysis</b> using   
                 <br></br>
                 aggregate and target metric filters 
                 <br></br>
