@@ -1,4 +1,5 @@
 import AsyncSelect from "react-select/async";
+import "./dc_styles.css"
 
 export default function DataComparison(){
     const options = [
