@@ -1,6 +1,6 @@
 import AsyncSelect from "react-select/async";
 import "./dc_styles.css"
-import * as dbInterface from "../DatabaseInterface.js"
+// import * as dbInterface from "../DatabaseInterface.js" //might cause merge conflict
 
 export default function DataComparison(){
     // Define where we store the data (ex. names stores the names of geysers)
@@ -11,24 +11,23 @@ export default function DataComparison(){
         {value: "temp1", label: "Temp1"},
      ];
     
+    //might cause merge conflict
     // Use a specific REST CALL to get a list of the geysers, saving their names
-    let query = '/geysers';
-    dbInterface.getGeyserInfo(query, names).catch(error => {
-      console.error(error);
-    });
-    // console.log(names); //debug
+    // let query = '/geysers';
+    // dbInterface.getGeyserInfo(query, names).catch(error => {
+    //   console.error(error);
+    // });
 
     // Search a specific search list (source) for seachValue
     // Usable by AsyncSelect after specifying the source list
-    const loadOptions = (source) => {
-        return (searchValue, callback) => {
-            setTimeout(()=> {
-                const filterOptions = source.filter(option => 
-                    option.label.toLowerCase().includes(searchValue.toLowerCase()));
-                    callback(filterOptions);
-              }, 2000)
+    // TODO: make sure the source list isn't hardcoded (right now "option" is hardcoded)
+    const loadOptions = (searchValue, callback) => {
+        setTimeout(()=> {
+            const filterOptions = options.filter(option => 
+                option.label.toLowerCase().includes(searchValue.toLowerCase()));
+                callback(filterOptions);
+            }, 2000)
         }
-    }
 
     return (
         <>
@@ -43,10 +42,10 @@ export default function DataComparison(){
                 <li>Scenario 2</li>
             </ul>
             <ul className="dropdowns">
-                <li><AsyncSelect loadOptions={loadOptions(options)} defaultOptions placeholder="- Select -" isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions(options)} defaultOptions placeholder="- Select -" isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions(names)} defaultOptions placeholder="- Select -" isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions(names)} defaultOptions placeholder="- Select -" isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions} defaultOptions placeholder="- Select -" isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions} defaultOptions placeholder="- Select -" isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions} defaultOptions placeholder="- Select -" isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions} defaultOptions placeholder="- Select -" isClearable/></li>
             </ul>
             <button className="button">Create Graphs</button>
             
