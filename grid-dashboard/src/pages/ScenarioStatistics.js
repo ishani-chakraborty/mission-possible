@@ -1,24 +1,32 @@
 import AsyncSelect from "react-select/async";
 import "./ss_styles.css";
+import * as dbInterface from "../DatabaseInterface.js"
+
+
 
 export default function ScenarioStatistics() {
+  // Define where we store the dropdown data - we only have to collect it once
   const options = [
     { value: "temp", label: "Temp" },
     { value: "temp1", label: "Temp1" },
   ];
 
-  const loadOptions = (searchValue, callback) => {
-    setTimeout(() => {
-      const filterOptions = options.filter((option) =>
-        option.label.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      callback(filterOptions);
-    }, 2000);
-  };
+  // Search a specific search list (source) for seachValue
+  // Usable by AsyncSelect after specifying the source list
+  const loadOptions = (source) => {
+    return (searchValue, callback) => {
+      setTimeout(()=> {
+        const filterOptions = source.filter(option => 
+          option.label.toLowerCase().includes(searchValue.toLowerCase()));
+          callback(filterOptions);
+        }, 2000)
+      }
+  }
 
   const showTable = () => {
     document.getElementById("show-buttons").style.display = "block";
   };
+
   return (
     <>
       <h1 className="scenariostats">Scenario Statistics</h1>
@@ -78,7 +86,7 @@ export default function ScenarioStatistics() {
         <li>Scenario</li>
         <li>
           <AsyncSelect
-            loadOptions={loadOptions}
+            loadOptions={loadOptions(options)}
             defaultOptions
             placeholder="- Select -"
             isClearable
@@ -89,7 +97,7 @@ export default function ScenarioStatistics() {
         <li>Target Metric</li>
         <li>
           <AsyncSelect
-            loadOptions={loadOptions}
+            loadOptions={loadOptions(options)}
             defaultOptions
             placeholder="- Select -"
             isClearable
@@ -101,7 +109,7 @@ export default function ScenarioStatistics() {
         <li>Filter</li>
         <li>
           <AsyncSelect
-            loadOptions={loadOptions}
+            loadOptions={loadOptions(options)}
             defaultOptions
             placeholder="- Select -"
             isClearable
@@ -112,7 +120,7 @@ export default function ScenarioStatistics() {
         <li>Aggregates</li>
         <li>
           <AsyncSelect
-            loadOptions={loadOptions}
+            loadOptions={loadOptions(options)}
             defaultOptions
             placeholder="- Select -"
             isClearable

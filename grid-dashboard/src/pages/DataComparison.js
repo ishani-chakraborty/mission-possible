@@ -1,33 +1,46 @@
 import AsyncSelect from "react-select/async";
 import "./dc_styles.css"
-// import * as dbInterface from "../DatabaseInterface.js" //might cause merge conflict
+import * as dbInterface from "../DatabaseInterface.js"
+import Scatter from '../graphs/Scatter'
+import Heatmap from '../graphs/Heatmap'
+import Histogram from '../graphs/Histogram'
 
 export default function DataComparison(){
     // Define where we store the data (ex. names stores the names of geysers)
-    // In practce we'd have dates, times, and scenarios
-    let names = [];
+    let scenario_names = [];
+    let node_names = [
+        {value: ".I.Kent", label: ".I.Kent"},
+        {value: "AR.BRIGHTON345 UBGH2P", label: "AR.BRIGHTON345 UBGH2P"},
+        {value: "LD.KENT", label: "LD.KENT"}
+    ];
+    let metrics = [
+        {value: "lmp", label: "LMP"},
+        {value: "mw", label: "MW"},
+    ];
     const options = [
         {value: "temp", label: "Temp"},
         {value: "temp1", label: "Temp1"},
      ];
     
-    //might cause merge conflict
     // Use a specific REST CALL to get a list of the geysers, saving their names
-    // let query = '/geysers';
-    // dbInterface.getGeyserInfo(query, names).catch(error => {
-    //   console.error(error);
-    // });
+    let query = '/geysers';
+    let list_to_save_to = scenario_names;
+    dbInterface.getGeyserInfo(query, list_to_save_to).catch(error => {
+      console.error(error);
+    });
 
     // Search a specific search list (source) for seachValue
     // Usable by AsyncSelect after specifying the source list
-    // TODO: make sure the source list isn't hardcoded (right now "option" is hardcoded)
-    const loadOptions = (searchValue, callback) => {
-        setTimeout(()=> {
-            const filterOptions = options.filter(option => 
-                option.label.toLowerCase().includes(searchValue.toLowerCase()));
-                callback(filterOptions);
-            }, 2000)
-        }
+    const loadOptions = (source) => {
+        return (searchValue, callback) => {
+            setTimeout(()=> {
+                const filterOptions = source.filter(option => 
+                    option.label.toLowerCase().includes(searchValue.toLowerCase()));
+                    callback(filterOptions);
+                }, 2000)
+            }
+    }
+
 
     return (
         <>
@@ -40,15 +53,24 @@ export default function DataComparison(){
                 <li>Time</li>
                 <li>Scenario 1</li>
                 <li>Scenario 2</li>
+                <li>Node</li>
+                <li>Metric</li>
             </ul>
             <ul className="dropdowns">
-                <li><AsyncSelect loadOptions={loadOptions} defaultOptions placeholder="- Select -" isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions} defaultOptions placeholder="- Select -" isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions} defaultOptions placeholder="- Select -" isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions} defaultOptions placeholder="- Select -" isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions(options)}        defaultOptions placeholder="- Select -" isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions(options)}        defaultOptions placeholder="- Select -" isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions(scenario_names)} defaultOptions placeholder="- Select -" isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions(scenario_names)} defaultOptions placeholder="- Select -" isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions(node_names)}     defaultOptions placeholder="- Select -" isClearable/></li>
+                <li><AsyncSelect loadOptions={loadOptions(metrics)}        defaultOptions placeholder="- Select -" isClearable/></li>
             </ul>
             <button className="button">Create Graphs</button>
             
+            {/* TODO: Need some way to switch between the different types*/}
+            <Scatter></Scatter>
+            <Histogram></Histogram>
+            <Heatmap></Heatmap>
+
         </>
     );
 
