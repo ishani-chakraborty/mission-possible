@@ -1,66 +1,85 @@
+@import "rsuite/dist/rsuite.css";
 /*______________________________ */
 /*_______Data_Comparison________ */
 /*______________________________ */
 .datacomp {
-    margin: 1rem;
-    color: white;
-    text-align: center;
-    font-size: 2rem;
-    font-weight: bolder;
+	margin: 1rem;
+	color: white;
+	text-align: center;
+	font-size: 2rem;
+	font-weight: bolder;
 }
 
 .config {
-    margin: 0.5rem;
-    color: white;
-    text-align: center;
-    font-size: 1rem;
-    font-weight: 100;
+	margin: 0.5rem;
+	color: white;
+	text-align: center;
+	font-size: 1rem;
+	font-weight: 100;
 }
 
 .headers {
-    display: flex;
-    flex-direction: row;
-    padding-left: 1rem;
-    padding-right: 1rem;
+	display: flex;
+	flex-direction: row;
+	padding-left: 1rem;
+	padding-right: 1rem;
 }
 
-.headers li{
-    list-style: none;
-    margin-top: 2rem;
-    flex: 1rem; 
-    font-size: 1.25rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    border-radius: 1rem;
-    color: white;
+.headers li {
+	list-style: none;
+	margin-top: 2rem;
+	flex: 1rem;
+	font-size: 1.25rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+	border-radius: 1rem;
+	color: white;
 }
 
 .dropdowns {
-    display: flex;
-    flex-direction: row;
-    height: 100%;
-    padding: 1rem;
+	display: flex;
+	flex-direction: row;
+	height: 100%;
+	padding: 1rem;
 }
 
-.dropdowns li{
-    list-style: none;
-    flex: 1rem; 
-    font-size: 1rem;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    border-radius: 1rem;
+.dropdowns li {
+	list-style: none;
+	flex: 1rem;
+	font-size: 1rem;
+	margin-left: 1rem;
+	margin-right: 1rem;
+	border-radius: 1rem;
 }
 
 .button {
-    display: flex;
-    background-color: #1CABCB;
-    color: white; 
-    text-align: center;
-    font-size: 1.5rem;
-    padding: 1rem;
-    font-weight: bold;
-    border-radius: 1.5rem;
+	display: flex;
+	background-color: #1cabcb;
+	color: white;
+	text-align: center;
+	font-size: 1.5rem;
+	padding: 1rem;
+	font-weight: bold;
+	border-radius: 1.5rem;
+	margin: auto;
+	margin-top: 2rem;
+	align-items: center;
+}
+
+.scatter {
+    display: flex; /* flex, none*/
     margin: auto;
-    margin-top: 2rem;
+    align-items: center;
+}
+
+.histogram {
+    display: flex; /* flex, none*/
+    margin: auto;
+    align-items: center;
+}
+
+.heatmap {
+    display: flex; /* flex, none*/
+    margin: auto;
     align-items: center;
 }

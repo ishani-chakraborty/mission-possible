@@ -1,0 +1,21 @@
+GET http://localhost:3001/api
+
+###
+
+GET http://localhost:3001/api/Node_Data
+
+###
+
+GET http://localhost:3001/api/Scenarios
+
+###
+
+GET http://localhost:3001/api/Scenarios/4
+
+###
+
+GET http://localhost:3001/api/Scenario
+
+###
+
+GET http://localhost:3001/api/Node_Data?LMP=30.18

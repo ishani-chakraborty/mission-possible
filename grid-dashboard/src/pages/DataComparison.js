@@ -1,5 +1,6 @@
 import AsyncSelect from "react-select/async";
 import "./dc_styles.css"
+import { DateRangePicker } from "rsuite";
 import * as dbInterface from "../DatabaseInterface.js"
 import Scatter from '../graphs/Scatter'
 import Heatmap from '../graphs/Heatmap'
@@ -29,49 +30,90 @@ export default function DataComparison(){
       console.error(error);
     });
 
-    // Search a specific search list (source) for seachValue
-    // Usable by AsyncSelect after specifying the source list
-    const loadOptions = (source) => {
-        return (searchValue, callback) => {
-            setTimeout(()=> {
-                const filterOptions = source.filter(option => 
-                    option.label.toLowerCase().includes(searchValue.toLowerCase()));
-                    callback(filterOptions);
-                }, 2000)
-            }
-    }
+	// Search a specific search list (source) for seachValue
+	// Usable by AsyncSelect after specifying the source list
+	const loadOptions = (source) => {
+		return (searchValue, callback) => {
+			setTimeout(() => {
+				const filterOptions = source.filter((option) =>
+					option.label
+						.toLowerCase()
+						.includes(searchValue.toLowerCase())
+				);
+				callback(filterOptions);
+			}, 2000);
+		};
+	};
 
-
-    return (
-        <>
-            <h1 className="datacomp">Data Comparison</h1>
-            <hr></hr>
-            <h1 className="config">Configuration</h1>
-            <hr></hr>
-            <ul className="headers">
-                <li>Date</li>
-                <li>Time</li>
-                <li>Scenario 1</li>
-                <li>Scenario 2</li>
-                <li>Node</li>
+	return (
+		<>
+			<h1 className="datacomp">Data Comparison</h1>
+			<hr></hr>
+			<h1 className="config">Configuration</h1>
+			<hr></hr>
+			<ul className="headers">
+				<li>Date</li>
+				<li>Scenario 1</li>
+				<li>Scenario 2</li>
+                <li>Node Name</li>
                 <li>Metric</li>
-            </ul>
-            <ul className="dropdowns">
-                <li><AsyncSelect loadOptions={loadOptions(options)}        defaultOptions placeholder="- Select -" isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions(options)}        defaultOptions placeholder="- Select -" isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions(scenario_names)} defaultOptions placeholder="- Select -" isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions(scenario_names)} defaultOptions placeholder="- Select -" isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions(node_names)}     defaultOptions placeholder="- Select -" isClearable/></li>
-                <li><AsyncSelect loadOptions={loadOptions(metrics)}        defaultOptions placeholder="- Select -" isClearable/></li>
-            </ul>
-            <button className="button">Create Graphs</button>
-            
+			</ul>
+			<ul className="dropdowns">
+				<li>
+					<DateRangePicker
+						format="yyyy-MM-dd hh:mm aa"
+						showMeridian
+						defaultCalendarValue={[
+							new Date("2022-02-01 00:00:00"),
+							new Date("2022-05-01 23:59:59"),
+						]}
+					/>
+				</li>
+				<li>
+					<AsyncSelect
+						loadOptions={loadOptions(scenario_names)}
+						defaultOptions
+						placeholder="- Select -"
+						isClearable
+					/>
+				</li>
+				<li>
+					<AsyncSelect
+						loadOptions={loadOptions(scenario_names)}
+						defaultOptions
+						placeholder="- Select -"
+						isClearable
+					/>
+				</li>
+                <li>
+					<AsyncSelect
+						loadOptions={loadOptions(node_names)}
+						defaultOptions
+						placeholder="- Select -"
+						isClearable
+					/>
+				</li>
+                <li>
+					<AsyncSelect
+						loadOptions={loadOptions(metrics)}
+						defaultOptions
+						placeholder="- Select -"
+						isClearable
+					/>
+				</li>
+			</ul>
+			<button className="button">Create Graphs</button>
+
             {/* TODO: Need some way to switch between the different types*/}
-            <Scatter></Scatter>
-            <Histogram></Histogram>
-            <Heatmap></Heatmap>
-
-        </>
-    );
-
-};
+            <ul className="scatter">
+                <Scatter></Scatter>
+            </ul>
+            <ul className="histogram">
+                <Histogram></Histogram>
+            </ul>
+            <ul className="heatmap">
+                <Heatmap></Heatmap>
+            </ul>
+		</>
+	);
+}
