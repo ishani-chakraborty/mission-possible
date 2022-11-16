@@ -1,12 +1,17 @@
 import AsyncSelect from "react-select/async";
 import "./ss_styles.css";
+import * as dbInterface from "../DatabaseInterface.js"
+
 
 export default function ScenarioStatistics() {
-	const options = [
-		{ value: "temp", label: "Temp" },
-		{ value: "temp1", label: "Temp1" },
-	];
+  // Define where we store the dropdown data - we only have to collect it once
+  const options = [
+    { value: "temp", label: "Temp" },
+    { value: "temp1", label: "Temp1" },
+  ];
 
+  // load options from the 'options' list
+  // TODO: generalize to any list, not just 'options'
 	const loadOptions = (searchValue, callback) => {
 		setTimeout(() => {
 			const filterOptions = options.filter((option) =>

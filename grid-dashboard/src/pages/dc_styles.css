@@ -65,3 +65,21 @@
 	margin-top: 2rem;
 	align-items: center;
 }
+
+.scatter {
+    display: flex; /* flex, none*/
+    margin: auto;
+    align-items: center;
+}
+
+.histogram {
+    display: flex; /* flex, none*/
+    margin: auto;
+    align-items: center;
+}
+
+.heatmap {
+    display: flex; /* flex, none*/
+    margin: auto;
+    align-items: center;
+}
