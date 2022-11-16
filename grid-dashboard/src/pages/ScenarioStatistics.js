@@ -100,46 +100,48 @@ export default function ScenarioStatistics() {
 			<h1 className="config1">Configuration</h1>
 			<hr></hr>
 			<table className="table_row" id="show-buttons">
-				<tr>
-					<th>Metric</th>
-					<th>Value</th>
-				</tr>
-				<tr>
-					<td className="first">Mean</td>
-					<td id="mean_val">Value</td>
-				</tr>
-				<tr>
-					<td className="first">Median</td>
-					<td id="median_val">Value</td>
-				</tr>
-				<tr>
-					<td className="first">Std Dev</td>
-					<td id="std_val">Value</td>
-				</tr>
-				<tr>
-					<td className="first">Min</td>
-					<td id="min_val">Value</td>
-				</tr>
-				<tr>
-					<td className="first">Max</td>
-					<td id="max_val">Value</td>
-				</tr>
-				<tr>
-					<td className="first">P99</td>
-					<td id="99_val">Value</td>
-				</tr>
-				<tr>
-					<td className="first">P95</td>
-					<td id="95_val">Value</td>
-				</tr>
-				<tr>
-					<td className="first">P90</td>
-					<td id="90_val">Value</td>
-				</tr>
-				<tr>
-					<td className="first">Skew</td>
-					<td id="skew_val">Value</td>
-				</tr>
+				<tbody>
+					<tr>
+						<th>Metric</th>
+						<th>Value</th>
+					</tr>
+					<tr>
+						<td className="first">Mean</td>
+						<td id="mean_val">Value</td>
+					</tr>
+					<tr>
+						<td className="first">Median</td>
+						<td id="median_val">Value</td>
+					</tr>
+					<tr>
+						<td className="first">Std Dev</td>
+						<td id="std_val">Value</td>
+					</tr>
+					<tr>
+						<td className="first">Min</td>
+						<td id="min_val">Value</td>
+					</tr>
+					<tr>
+						<td className="first">Max</td>
+						<td id="max_val">Value</td>
+					</tr>
+					<tr>
+						<td className="first">P99</td>
+						<td id="99_val">Value</td>
+					</tr>
+					<tr>
+						<td className="first">P95</td>
+						<td id="95_val">Value</td>
+					</tr>
+					<tr>
+						<td className="first">P90</td>
+						<td id="90_val">Value</td>
+					</tr>
+					<tr>
+						<td className="first">Skew</td>
+						<td id="skew_val">Value</td>
+					</tr>
+				</tbody>
 			</table>
 			<ul className="group1">
 				<li>Scenario</li>
