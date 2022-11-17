@@ -11,7 +11,7 @@ class Scatter extends Component {
     this.scenario_name = "Scenario"
     this.label = 'Node'
     this.base_case = [30, 40, 35, 50, 49, 60, 70, 91, 125, 32, 42, 37, 52, 48, 62, 72, 93, 120]
-    this.scenario  = [28, 42, 37, 48, 47, 60, 70, 84, 120, 35, 43, 36, 50, 50, 50, 72, 93, 125]
+    this.scenario  = [28, 42, 37, 48, 47, 60, 70, 84, 120, 35, 43, 36, 50, 50, 50, 72, 93, 60]
     
     // TODO: This will require pairing json objects by date, rather than simply lining up indeces
     this.data = []

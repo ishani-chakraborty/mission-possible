@@ -63,23 +63,43 @@
 	border-radius: 1.5rem;
 	margin: auto;
 	margin-top: 2rem;
+    margin-bottom: 2rem;
 	align-items: center;
 }
 
+.graph_headers{
+    display: none;
+    text-align: center;
+    font-size: 1.25rem;
+	color: white;
+}
+
+.graph_dropdowns{
+    display: none; /* will turn into block */
+    /* text-align: center; */
+    font-size: 1rem;
+	padding: 1rem;
+    margin-top: -0.5rem;
+    margin-left: auto;
+    margin-right: auto;
+    width: 14rem;
+    height: 100%;
+}
+
 .scatter {
-    display: flex; /* flex, none*/
+    display: flex;
     margin: auto;
     align-items: center;
 }
 
 .histogram {
-    display: flex; /* flex, none*/
+    display: flex;
     margin: auto;
     align-items: center;
 }
 
 .heatmap {
-    display: flex; /* flex, none*/
+    display: flex;
     margin: auto;
     align-items: center;
 }
