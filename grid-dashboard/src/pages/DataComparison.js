@@ -10,8 +10,8 @@ import React, { useState } from "react";
 
 export default function DataComparison(){
 
-	// react hooks
-	const [curGraph, setGraph] = useState('')
+	const [curGraph, setGraph] = useState('') //react hook
+	const default_graph = "scatter";
 
     // Define where we store the data (ex. names stores the names of geysers)
     let scenario_names = [];
@@ -35,6 +35,7 @@ export default function DataComparison(){
 		{value: "histogram", label: "histogram"}
 	]
     
+	// populate the dropdown lists
     // Use a specific REST CALL to get a list of the geysers, saving their names
     let query = '/geysers';
     let list_to_save_to = scenario_names;
@@ -57,7 +58,7 @@ export default function DataComparison(){
 		};
 	};
 
-	//chan ge chich graph is displayed
+	// change which graph is displayed by using the react hook
 	const OnChangeSelectedOption = (selectedOption) => {
 		console.log("handle change", selectedOption);
 		setGraph(selectedOption.value)
@@ -65,14 +66,13 @@ export default function DataComparison(){
 	}
 
 	const showDrop = () =>{
-		// flex, block
+		// make these elements visisble, set the default graph
 		document.getElementsByClassName("graph_dropdowns")[0].style.display = "block";
 		document.getElementsByClassName("graph_headers")[0].style.display = "block";
-		setGraph("scatter");
-		
+		setGraph(default_graph);
 	}
 
-	// console.log(state)
+	
 	return (
 		<>
 			<h1 className="datacomp">Data Comparison</h1>
@@ -142,25 +142,27 @@ export default function DataComparison(){
 						onChange={OnChangeSelectedOption}
 						loadOptions={loadOptions(graphs)}
 						defaultOptions
-						defaultInputValue="scatter"
+						defaultInputValue={default_graph}
 						placeholder="- Select -"
 						isClearable
 					/>
 				</li>
 			</ul>
 
-            {/* TODO: Need some way to switch between the different types*/}
 			<ul className="scatter">
+				{/* Conditionally render scatter plot */}
 				{curGraph==='scatter' &&
 					<Scatter></Scatter>
 				}
 			</ul>
 			<ul className="histogram">
+				{/* Conditionally render histogram */}
 				{curGraph==='histogram' &&
 					<Histogram></Histogram>
 				}
 			</ul>
 			<ul className="heatmap">
+				{/* Conditionally render heatmap */}
 				{curGraph==='heatmap' &&
 					<Heatmap></Heatmap>
 				}

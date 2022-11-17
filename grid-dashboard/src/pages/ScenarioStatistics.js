@@ -4,21 +4,34 @@ import * as dbInterface from "../DatabaseInterface.js"
 
 
 export default function ScenarioStatistics() {
-  // Define where we store the dropdown data - we only have to collect it once
-  const options = [
-    { value: "temp", label: "Temp" },
-    { value: "temp1", label: "Temp1" },
-  ];
+	// Define where we store the dropdown data - we only have to collect it once
+	const options = [
+		{ value: "temp", label: "Temp" },
+		{ value: "temp1", label: "Temp1" },
+	];
+	let scenario_names = [
+		{value: "Base Case", label: "Base Case"},
+		{value: "Scenario 1", label: "Scenario 1"},
+		{value: "Scenario 2", label: "Scenario 2"}
+	];
+	let metrics = [
+		{value: "lmp", label: "LMP"},
+		{value: "mw", label: "MW"},
+	];
 
-  // load options from the 'options' list
-  // TODO: generalize to any list, not just 'options'
-	const loadOptions = (searchValue, callback) => {
-		setTimeout(() => {
-			const filterOptions = options.filter((option) =>
-				option.label.toLowerCase().includes(searchValue.toLowerCase())
-			);
-			callback(filterOptions);
-		}, 2000);
+	// Search a specific search list (source) for seachValue
+	// Usable by AsyncSelect after specifying the source list
+	const loadOptions = (source) => {
+		return (searchValue, callback) => {
+			setTimeout(() => {
+				const filterOptions = source.filter((option) =>
+					option.label
+						.toLowerCase()
+						.includes(searchValue.toLowerCase())
+				);
+				callback(filterOptions);
+			}, 2000);
+		};
 	};
 
 	let fakeArray = [1, 2, 3, 5, 7, 9]; //fake array for dummy data
@@ -152,7 +165,7 @@ export default function ScenarioStatistics() {
 				<li>Scenario</li>
 				<li>
 					<AsyncSelect
-						loadOptions={loadOptions}
+						loadOptions={loadOptions(scenario_names)}
 						defaultOptions
 						placeholder="- Select -"
 						isClearable
@@ -163,7 +176,7 @@ export default function ScenarioStatistics() {
 				<li>Target Metric</li>
 				<li>
 					<AsyncSelect
-						loadOptions={loadOptions}
+						loadOptions={loadOptions(metrics)}
 						defaultOptions
 						placeholder="- Select -"
 						isClearable
@@ -175,7 +188,7 @@ export default function ScenarioStatistics() {
 				<li>Filter</li>
 				<li>
 					<AsyncSelect
-						loadOptions={loadOptions}
+						loadOptions={loadOptions(options)}
 						defaultOptions
 						placeholder="- Select -"
 						isClearable
@@ -186,7 +199,7 @@ export default function ScenarioStatistics() {
 				<li>Aggregates</li>
 				<li>
 					<AsyncSelect
-						loadOptions={loadOptions}
+						loadOptions={loadOptions(options)}
 						defaultOptions
 						placeholder="- Select -"
 						isClearable
