@@ -6,7 +6,13 @@ import Scatter from '../graphs/Scatter'
 import Heatmap from '../graphs/Heatmap'
 import Histogram from '../graphs/Histogram'
 
+import React, { useState } from "react";
+
 export default function DataComparison(){
+
+	const [curGraph, setGraph] = useState('') //react hook
+	const default_graph = "scatter";
+
     // Define where we store the data (ex. names stores the names of geysers)
     let scenario_names = [];
     let node_names = [
@@ -22,7 +28,14 @@ export default function DataComparison(){
         {value: "temp", label: "Temp"},
         {value: "temp1", label: "Temp1"},
      ];
+
+	const graphs = [
+		{value: "scatter", label: "scatter"},
+		{value: "heatmap", label: "heatmap"},
+		{value: "histogram", label: "histogram"}
+	]
     
+	// populate the dropdown lists
     // Use a specific REST CALL to get a list of the geysers, saving their names
     let query = '/geysers';
     let list_to_save_to = scenario_names;
@@ -45,6 +58,21 @@ export default function DataComparison(){
 		};
 	};
 
+	// change which graph is displayed by using the react hook
+	const OnChangeSelectedOption = (selectedOption) => {
+		console.log("handle change", selectedOption);
+		setGraph(selectedOption.value)
+		console.log('Now displaying graph: ', curGraph)
+	}
+
+	const showDrop = () =>{
+		// make these elements visisble, set the default graph
+		document.getElementsByClassName("graph_dropdowns")[0].style.display = "block";
+		document.getElementsByClassName("graph_headers")[0].style.display = "block";
+		setGraph(default_graph);
+	}
+
+	
 	return (
 		<>
 			<h1 className="datacomp">Data Comparison</h1>
@@ -102,18 +130,44 @@ export default function DataComparison(){
 					/>
 				</li>
 			</ul>
-			<button className="button">Create Graphs</button>
 
-            {/* TODO: Need some way to switch between the different types*/}
-            <ul className="scatter">
-                <Scatter></Scatter>
-            </ul>
-            <ul className="histogram">
-                <Histogram></Histogram>
-            </ul>
-            <ul className="heatmap">
-                <Heatmap></Heatmap>
-            </ul>
+			<button className="button" onClick={showDrop}>Create Graphs</button>
+
+			<ul className="graph_headers">
+				<li>Graph Type</li>
+			</ul>
+			<ul className="graph_dropdowns">
+				<li>
+					<AsyncSelect
+						onChange={OnChangeSelectedOption}
+						loadOptions={loadOptions(graphs)}
+						defaultOptions
+						defaultInputValue={default_graph}
+						placeholder="- Select -"
+						isClearable
+					/>
+				</li>
+			</ul>
+
+			<ul className="scatter">
+				{/* Conditionally render scatter plot */}
+				{curGraph==='scatter' &&
+					<Scatter></Scatter>
+				}
+			</ul>
+			<ul className="histogram">
+				{/* Conditionally render histogram */}
+				{curGraph==='histogram' &&
+					<Histogram></Histogram>
+				}
+			</ul>
+			<ul className="heatmap">
+				{/* Conditionally render heatmap */}
+				{curGraph==='heatmap' &&
+					<Heatmap></Heatmap>
+				}
+			</ul>
+			
 		</>
 	);
 }
