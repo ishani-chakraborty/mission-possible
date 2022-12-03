@@ -120,7 +120,6 @@ class Scatter extends Component {
 
   static bestFit(data, max_x, max_y) {
     // using a linear least squares algorithim
-    // following: https://stackoverflow.com/questions/12946341/algorithm-for-scatter-plot-best-fit-line
 
     // sum the x-terms together and the y-terms together
     let sums = data.reduce((a, b) => [a[0] + b[0], a[1] + b[1]])

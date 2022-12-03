@@ -3,8 +3,6 @@ import Chart from 'react-apexcharts'
 
 class Histogram extends Component {
 
-  // TODO: URGENT: I fricked something up so now the dropdowns don't align with their titles 
-
   constructor (props) {
     super(props)
 
@@ -35,7 +33,6 @@ class Histogram extends Component {
     this.interval = (this.abs_max - this.abs_min) / numOfBuckets;
     this.bins1 = Histogram.dataToBins(this.data1, numOfBuckets, this.abs_min, this.abs_max, this.interval)
     this.bins2 = Histogram.dataToBins(this.data2, numOfBuckets, this.abs_min, this.abs_max, this.interval)
-    // console.log(bins1); //debug
 
     // find the tallest bin (for graph scaling)
     this.tallest_bin = 0
@@ -62,6 +59,8 @@ class Histogram extends Component {
       let scenario = (id===1) ? 'Base Case' : this.passed_data.scenario_name;
       let x_title =  (id===1) ? '' : this.passed_data.metric; // Only display title on bottom
       let stats =    (id===1) ? this.statisticsString1 : this.statisticsString2
+      let color =    (id===1) ? "#ff4040" : "#244ae3"
+      let stroke =   (id===1) ? "#ee8080" : "#AFDCEC"
 
       return {
         chart: {
@@ -77,12 +76,12 @@ class Histogram extends Component {
           }
         },
         fill: {
-          colors: "#ff4040",
+          colors: color,
           opacity: 0.7
         },
         stroke: {
           width: 2,
-          colors: ["#ee8080"]
+          colors: [stroke]
         },
         dataLabels: { enabled: false },
         grid: {
@@ -178,13 +177,15 @@ class Histogram extends Component {
       } //end options
     }
 
-    // Adapted from: https://stackoverflow.com/questions/74419893/make-a-histogram-in-apexcharts-js
     this.state = {
       series1: [{name: ' ', data: this.bins1}],
       series2: [{name: ' ', data: this.bins2}],
 
       options1: options(1),
-      options2: options(2)
+      options2: options(2),
+
+      series_tuple: [{name: ' ', data: this.bins1}, {name: ' ', data: this.bins2}],
+      tuple_options: options(2)
     } //end state
 
   }
@@ -225,7 +226,6 @@ class Histogram extends Component {
 
   // turn an array of data into bins with labels and counts
   static dataToBins(data, numOfBuckets, min, max, interval) {
-    // Following: https://stackoverflow.com/questions/37445495/binning-an-array-in-javascript-for-a-histogram
     let bins = []
 
     //Setup Bins
