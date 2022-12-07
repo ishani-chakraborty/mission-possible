@@ -23,8 +23,8 @@ class Scatter extends Component {
     let max_x = Math.max(...this.base_case)
     let max_y = Math.max(...this.scenario)
 
-    // like [ [0, b], [x, mx+b] ], where x=max_x
-    this.best_fit = Scatter.bestFit(this.data, max_x)
+    // like [ [x0, 0], [xn, max_y] ] where x0 and xn fall on the line of best fit
+    this.best_fit = Scatter.bestFit(this.data, max_x, max_y)
 
     let max = Math.max(max_x, max_y)
     this.ideal_fit = [ [0, 0], [max, max]]
@@ -118,9 +118,8 @@ class Scatter extends Component {
 
   }
 
-  static bestFit(data, max_x) {
+  static bestFit(data, max_x, max_y) {
     // using a linear least squares algorithim
-    // following: https://stackoverflow.com/questions/12946341/algorithm-for-scatter-plot-best-fit-line
 
     // sum the x-terms together and the y-terms together
     let sums = data.reduce((a, b) => [a[0] + b[0], a[1] + b[1]])
@@ -135,7 +134,8 @@ class Scatter extends Component {
     let m = (avgXY - meanX * meanY) / (avgXSquared - meanX * meanX)
     let b = m * meanX - meanY
     
-    return [[0, -b], [max_x, m*max_x - b]]
+    // originally [[0, -b], [max_x, m*max_x - b]], but that doesn't touch y=0, y=max_y for graph scaling
+    return [[b / m, 0], [(max_y + b) / m, max_y]]
   }
 
 

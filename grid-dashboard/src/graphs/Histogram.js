@@ -5,41 +5,70 @@ class Histogram extends Component {
 
   constructor (props) {
     super(props)
-    Histogram.enableStringFormatting()
 
     // TODO: How to get this dynamically?
-    this.label = 'LMP'
-    this.data = [30, 40, 35, 50, 49, 60, 70, 91, 125, 32, 42, 37, 52, 48, 62, 72, 93, 123]
+    // This data in this format is exactly what the graph needs
+    this.passed_data = {
+      metric: 'LMP',
+      base_case: [30, 40, 35, 50, 49, 60, 70, 91, 125, 32, 42, 37, 52, 48, 62, 72, 93, 123],
+      scenario_to_compare: [35, 45, 40, 55, 54, 65, 75, 96, 130, 37, 47, 42, 57, 53, 67, 77, 98, 127], //+5
+      scenario_name: 'Scenario 1'
+    }
+    
+    // from the passed data, construct this information
+    // List[number] : the metric for each datapoint
+    this.data1 = this.passed_data.base_case
+    this.data2 = this.passed_data.scenario_to_compare
 
     // Get the mean, median, and standard deviation of the data
-    this.statistics = Histogram.getStatistics(this.data)
+    let statistics1 = Histogram.getStatistics(this.data1)
+    let statistics2 = Histogram.getStatistics(this.data2)
+    this.statisticsString1 = 'Median: ' + statistics1.median + ' Mean: ' + statistics1.mean + ' Std Deviation: ' + statistics1.std_dev;
+    this.statisticsString2 = 'Median: ' + statistics2.median + ' Mean: ' + statistics2.mean + ' Std Deviation: ' + statistics2.std_dev;
     
-    // Create a histogram w/ 10 bins
+    // Create a histogram w/ 10 bins using the min/max of the two lists
     const numOfBuckets = 10;
-    this.min = Math.min(...this.data);
-    this.max = Math.max(...this.data);
-    this.interval = (this.max-this.min) / numOfBuckets;
-    this.bins = Histogram.dataToBins(this.data, numOfBuckets, this.min, this.max, this.interval)
+    this.abs_min = Math.min( Math.min(...this.data1), Math.min(...this.data2) )
+    this.abs_max = Math.max( Math.max(...this.data1), Math.max(...this.data2) )
+    this.interval = (this.abs_max - this.abs_min) / numOfBuckets;
+    this.bins1 = Histogram.dataToBins(this.data1, numOfBuckets, this.abs_min, this.abs_max, this.interval)
+    this.bins2 = Histogram.dataToBins(this.data2, numOfBuckets, this.abs_min, this.abs_max, this.interval)
 
     // find the tallest bin (for graph scaling)
     this.tallest_bin = 0
-    for (let i = 0; i < this.bins.length; i++) {
-      if (this.bins[i].y > this.tallest_bin) {
-        this.tallest_bin = this.bins[i].y
+    for (let i = 0; i < numOfBuckets; i++) {
+      if (this.bins1[i].y > this.tallest_bin) {
+        this.tallest_bin = this.bins1[i].y
+      }
+      if (this.bins2[i].y > this.tallest_bin) {
+        this.tallest_bin = this.bins2[i].y
       }
     }
-    // console.log(bins); //debug
 
+    // rounds a number to at most numDecimals decimals
     const roundToDecimals = (num, numDecimals) => {
       let multiplier = Math.pow(10, numDecimals)
       return Math.round((num + Number.EPSILON) * multiplier) / multiplier
     }
-    
-    // Adapted from: https://stackoverflow.com/questions/74419893/make-a-histogram-in-apexcharts-js
-    this.state = {
-      series: [{name: ' ', data: this.bins}],
 
-      options: {
+    // returns a JSON that represents how the graph is customized
+    // each graph has slightly different options, so this is a function 
+    const options = (id) => {
+      // id===1 when base case => 1st set of data/statistics
+      // id===2 when scenario to compare
+      let scenario = (id===1) ? 'Base Case' : this.passed_data.scenario_name;
+      let x_title =  (id===1) ? '' : this.passed_data.metric; // Only display title on bottom
+      let stats =    (id===1) ? this.statisticsString1 : this.statisticsString2
+      let color =    (id===1) ? "#ff4040" : "#244ae3"
+      let stroke =   (id===1) ? "#ee8080" : "#AFDCEC"
+
+      return {
+        chart: {
+          id: scenario,
+          group: 'histo', //makes them synchronized charts
+          type: 'bar',
+          height: 300
+        },
         plotOptions: {
           bar: {
             columnWidth: "92%",
@@ -47,12 +76,12 @@ class Histogram extends Component {
           }
         },
         fill: {
-          colors: "#ff4040",
+          colors: color,
           opacity: 0.7
         },
         stroke: {
           width: 2,
-          colors: ["#ee8080"]
+          colors: [stroke]
         },
         dataLabels: { enabled: false },
         grid: {
@@ -62,19 +91,20 @@ class Histogram extends Component {
         },
         xaxis: {
           type: "numeric",
-          min: this.min,
-          max: this.max,
-          tickAmount: this.bins.length,
+          min: this.abs_min,
+          max: this.abs_max,
+          tickAmount: numOfBuckets,
           labels: {
             formatter: (x) => roundToDecimals(x, 2),
             style: { colors: 'white' }
           },
           title: {
-            text: this.label,
-            offsetY: 70,
+            text: x_title,
+            offsetY: 75,
             style: {
               fontSize:  '15px',
-              color:  'white'
+              color:  'white',
+              fontWeight:  'normal',
             },
           },
           axisBorder: {
@@ -84,10 +114,11 @@ class Histogram extends Component {
         },
         yaxis: {
           title: {
-            text: "Percent",
+            text: "Percent (" + scenario + ")",
             style: {
               fontSize:  '15px',
-              color:  'white'
+              color:  'white',
+              fontWeight:  'normal',
             },
           },
           min: 0,
@@ -110,7 +141,7 @@ class Histogram extends Component {
             formatter: (x) => {
               let left  = roundToDecimals((x - 0.5 * this.interval), 2)
               let right = roundToDecimals((x + 0.5 * this.interval), 2)
-              return this.label + " " + left + "-" + right;
+              return this.passed_data.metric + " " + left + "-" + right;
             }
           },
           y: {
@@ -120,49 +151,49 @@ class Histogram extends Component {
           }
         },
         title: {
-          text: '{0} Distribution'.format(this.label),
+          text: scenario,
+          floating: true,
           align: 'left',
           margin: 10,
           offsetX: 50,
-          offsetY: 20,
           style: {
-            fontSize:  '18px',
+            fontSize:  '16px',
             fontWeight:  'bold',
             color:  'white'
           },
         },
         subtitle: {
-          text: 'Median: {0} Mean: {1} Standard Deviation: {2}'.format(this.statistics.median.toFixed(2), this.statistics.mean.toFixed(2), this.statistics.std_dev.toFixed(2)),
-          align: 'right',
-          margin: 5,
-          floating: true,
-          offsetY: 25,
-          style: { color: 'white' },
+          text: stats,
+          floating: false,
+          align: 'left',
+          margin: 10,
+          offsetX: 50,
+          style: {
+            fontSize:  '13px',
+            fontWeight:  'normal',
+            color:  'white'
+          },
       }
       } //end options
+    }
+
+    this.state = {
+      series1: [{name: ' ', data: this.bins1}],
+      series2: [{name: ' ', data: this.bins2}],
+
+      options1: options(1),
+      options2: options(2),
+
+      series_tuple: [{name: ' ', data: this.bins1}, {name: ' ', data: this.bins2}],
+      tuple_options: options(2)
     } //end state
 
   }
 
-  // This is the only way I could get string formatting to work
-  // ex. "Hi {0}".format('Spencer')
-  static enableStringFormatting() {
-    // First, checks if it isn't implemented yet.
-    if (!String.prototype.format) {
-      String.prototype.format = function() {
-        var args = arguments;
-        return this.replace(/{(\d+)}/g, function(match, number) { 
-          return typeof args[number] != 'undefined'
-            ? args[number]
-            : match
-          ;
-        });
-      };
-    }
-  }
 
   // Calculates some useful statistics: mean, median, and standard deviation
   static getStatistics(data){
+    const num_decimals = 2;
     const sorted = [...data].sort((a, b) => a - b); //numerical sort
     let median = 0;
     let mean = 0;
@@ -185,12 +216,16 @@ class Histogram extends Component {
       std_dev = Math.sqrt(sumErr / data.length);
     }
 
-    return {median: median, mean: mean, std_dev: std_dev}
+    return {
+      median:  median.toFixed(num_decimals),
+      mean:    mean.toFixed(num_decimals),
+      std_dev: std_dev.toFixed(num_decimals)
+    }
   }
+
 
   // turn an array of data into bins with labels and counts
   static dataToBins(data, numOfBuckets, min, max, interval) {
-    // Following: https://stackoverflow.com/questions/37445495/binning-an-array-in-javascript-for-a-histogram
     let bins = []
 
     //Setup Bins
@@ -234,10 +269,17 @@ class Histogram extends Component {
   }
 
   render() {
-
+    
     return (
       <div className="histogram">
-        <Chart options={this.state.options} series={this.state.series} type="bar" width="600" />
+        <table>
+          <tr>
+            <Chart options={this.state.options1} series={this.state.series1} type="bar" width="600" />
+          </tr>
+          <tr>
+            <Chart options={this.state.options2} series={this.state.series2} type="bar" width="600" />
+          </tr>
+			  </table>
       </div>
     );
   }
