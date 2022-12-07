@@ -103,6 +103,31 @@ export default function DataComparison() {
 		setGraph(default_graph);
 	};
 
+	const pad = (s) =>{
+		s = s.toString();
+		if(s.length== 1){
+			return "0"+s;
+		}
+
+		return s;
+	}
+
+	const onChangeDateSelection = (selectedOption) => {
+		// console.log(func(selectedOption[0]));
+		let start = func(selectedOption[0])
+		let end = func(selectedOption[1])
+		let s = start.getFullYear() +"-"+ pad(start.getMonth()) +"-"+ pad(start.getDate())+" "+ pad(start.getHours())
+		let e = end.getFullYear() +"-"+ pad(end.getMonth()) +"-"+ pad(end.getDate())+" "+ pad(end.getHours())
+		console.log(s,e);
+		
+	}	
+
+	const func = (today) => {
+        var gmt =today.toUTCString()
+        // console.log(new Date( gmt));
+        return new Date(gmt);
+    } 
+
 	return (
 		<>
 			<h1 className="datacomp">Data Comparison</h1>
@@ -119,6 +144,7 @@ export default function DataComparison() {
 			<ul className="dropdowns">
 				<li>
 					<DateRangePicker
+						onChange = {onChangeDateSelection}
 						format="yyyy-MM-dd hh:mm aa"
 						showMeridian
 						defaultCalendarValue={[
