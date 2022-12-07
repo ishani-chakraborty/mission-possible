@@ -6,6 +6,14 @@ GET http://localhost:3001/api/Node_Data
 
 ###
 
+GET http://localhost:3001/api/Generators
+
+###
+
+GET http://localhost:3001/api/Generators/'UN.SUNDANCE345 USUN'
+
+###
+
 GET http://localhost:3001/api/Scenarios
 
 ###
@@ -18,4 +26,36 @@ GET http://localhost:3001/api/Scenario
 
 ###
 
-GET http://localhost:3001/api/Node_Data?LMP=30.18
+GET http://localhost:3001/api/Node_Data/2/
+
+###
+
+GET http://localhost:3001/api/Node_Data/2/'.Z.SOUTH'
+
+###
+
+GET http://localhost:3001/api/Node_Data/0/'UN.ALTA    345 UALT'
+
+###
+
+GET http://localhost:3001/api/Node_Data/3/'UN.ALTA    345 UALT'/LMP
+
+###
+
+GET http://localhost:3001/api/Node_Data/3/'UN.ALTA    345 UALT'/MW
+
+###
+
+GET http://localhost:3001/api/Node_Data/4/'UN.KENT    345 UKEN'/2020-07-17 03/2020-07-17 11
+
+###
+
+GET http://localhost:3001/api/Node_Data/3/'UN.KENT    345 UKEN'/2020-07-17 03/2020-07-17 11
+
+###
+
+GET http://localhost:3001/api/Node_Data/3/'UN.KENT    345 UKEN'/LMP/2020-07-17 03/2020-07-17 11
+
+###
+
+GET http://localhost:3001/api/Node_Data/0/
