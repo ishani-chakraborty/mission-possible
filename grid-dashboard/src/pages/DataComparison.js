@@ -22,9 +22,29 @@ export default function DataComparison() {
 	// console.log(my_json);
 	let listab = [];
 	let list_to_save = listab;
-	testdb.getGeyser(list_to_save).catch((error) => {
-		console.error(error);
-	});
+	testdb
+		.getGeyser(
+			list_to_save,
+			"http://localhost:3001/api/Scenarios",
+			"SCENARIO_ID",
+			"SCENRAIO_NAME"
+		)
+		.catch((error) => {
+			console.error(error);
+		});
+
+	let lista = [];
+	let list_to_sav = lista;
+	testdb
+		.getGeyser(
+			list_to_sav,
+			"http://localhost:3001/api/Node_Data",
+			"SCENARIO_ID",
+			"PNODE_NAME"
+		)
+		.catch((error) => {
+			console.error(error);
+		});
 	// const response = fetch("http://localhost:3001/api/Scenarios");
 	// const my_json = response.json();
 	// console.log(my_json);
@@ -33,18 +53,9 @@ export default function DataComparison() {
 	// let namess = fetch("api/Scenarios");
 	// console.log(namess.json());
 
-	let node_names = [
-		{ value: ".I.Kent", label: ".I.Kent" },
-		{ value: "AR.BRIGHTON345 UBGH2P", label: "AR.BRIGHTON345 UBGH2P" },
-		{ value: "LD.KENT", label: "LD.KENT" },
-	];
 	let metrics = [
 		{ value: "lmp", label: "LMP" },
 		{ value: "mw", label: "MW" },
-	];
-	const options = [
-		{ value: "temp", label: "Temp" },
-		{ value: "temp1", label: "Temp1" },
 	];
 
 	const graphs = [
@@ -118,7 +129,7 @@ export default function DataComparison() {
 				</li>
 				<li>
 					<AsyncSelect
-						loadOptions={loadOptions(options)}
+						loadOptions={loadOptions(listab)}
 						defaultOptions
 						placeholder="- Select -"
 						isClearable
@@ -134,7 +145,7 @@ export default function DataComparison() {
 				</li>
 				<li>
 					<AsyncSelect
-						loadOptions={loadOptions(node_names)}
+						loadOptions={loadOptions(lista)}
 						defaultOptions
 						placeholder="- Select -"
 						isClearable
