@@ -5,23 +5,52 @@ class Scatter extends Component {
 
   constructor (props) {
     super(props)
+    console.log(props.data)
 
-    // TODO: How to get this dynamically?
-    this.metric = "LMP"
-    this.scenario_name = "Scenario"
-    this.label = 'Node'
-    this.base_case = [30, 40, 35, 50, 49, 60, 70, 91, 125, 32, 42, 37, 52, 48, 62, 72, 93, 120]
-    this.scenario  = [28, 42, 37, 48, 47, 60, 70, 84, 120, 35, 43, 36, 50, 50, 50, 72, 93, 60]
-    
-    // TODO: This will require pairing json objects by date, rather than simply lining up indeces
-    this.data = []
-    for (let i = 0; i < Math.min(this.base_case.length, this.scenario.length); i++) {
-      this.data.push( [this.base_case[i], this.scenario[i]] );
+    // TODO: Get this dynamically using: this.passed_data=props.data
+    // This data in this format is exactly what the graph needs
+    this.passed_data = {
+      node: "Node",
+      metric: 'LMP',
+      base_case_name: 'Base Case',
+      scenario_name: 'Scenario',
+      base_case: [{LMP:30, PERIOD_ID: "2020-07-17 01"}, {LMP:40, PERIOD_ID: "2020-07-17 02"}, {LMP:35, PERIOD_ID: "2020-07-17 03"},
+                  {LMP:50, PERIOD_ID: "2020-07-17 04"}, {LMP:49, PERIOD_ID: "2020-07-17 05"}, {LMP:60, PERIOD_ID: "2020-07-17 06"},
+                  {LMP:70, PERIOD_ID: "2020-07-17 07"}, {LMP:91, PERIOD_ID: "2020-07-17 08"}, {LMP:125, PERIOD_ID: "2020-07-17 09"},
+                  {LMP:32, PERIOD_ID: "2020-07-17 10"}, {LMP:42, PERIOD_ID: "2020-07-17 11"}, {LMP:37, PERIOD_ID: "2020-07-17 12"},
+                  {LMP:52, PERIOD_ID: "2020-07-17 13"}, {LMP:48, PERIOD_ID: "2020-07-17 14"}, {LMP:62, PERIOD_ID: "2020-07-17 15"},
+                  {LMP:72, PERIOD_ID: "2020-07-17 16"}, {LMP:93, PERIOD_ID: "2020-07-17 17"}, {LMP:120, PERIOD_ID: "2020-07-17 18"}],
+      scenario_to_compare: [{LMP:28, PERIOD_ID: "2020-07-17 01"}, {LMP:42, PERIOD_ID: "2020-07-17 02"}, {LMP:37, PERIOD_ID: "2020-07-17 03"},
+                            {LMP:48, PERIOD_ID: "2020-07-17 04"}, {LMP:47, PERIOD_ID: "2020-07-17 05"}, {LMP:60, PERIOD_ID: "2020-07-17 06"},
+                            {LMP:70, PERIOD_ID: "2020-07-17 07"}, {LMP:84, PERIOD_ID: "2020-07-17 08"}, {LMP:120, PERIOD_ID: "2020-07-17 09"},
+                            {LMP:35, PERIOD_ID: "2020-07-17 10"}, {LMP:43, PERIOD_ID: "2020-07-17 11"}, {LMP:36, PERIOD_ID: "2020-07-17 12"},
+                            {LMP:50, PERIOD_ID: "2020-07-17 13"}, {LMP:50, PERIOD_ID: "2020-07-17 14"}, {LMP:50, PERIOD_ID: "2020-07-17 15"},
+                            {LMP:72, PERIOD_ID: "2020-07-17 16"}, {LMP:93, PERIOD_ID: "2020-07-17 17"}, {LMP:60, PERIOD_ID: "2020-07-17 18"}]
     }
+
+    this.metric = this.passed_data.metric
+    
+    // TODO: add an extra map layer for the node
+    // transform the base case into a map
+    let datetimeMap = new Map();
+    this.passed_data.base_case.forEach( baseData => {
+      datetimeMap.set(baseData.PERIOD_ID, baseData[this.metric]);
+    });
+
+    this.data = []
+
+    // match the scenario data (scenario_to_compare) to the base case
+    // If it matches, add it to the data
+    this.passed_data.scenario_to_compare.forEach( scenarioData => {
+      if (datetimeMap.has(scenarioData.PERIOD_ID)) {
+        let match = [datetimeMap.get(scenarioData.PERIOD_ID), scenarioData[this.metric]]
+        this.data.push(match);
+      }
+    });
     // console.log(this.data) // debug, should look like [ [x1, y1], [x2, y2], ..., [xn, yn] ]
 
-    let max_x = Math.max(...this.base_case)
-    let max_y = Math.max(...this.scenario)
+    let max_x = Math.max(...this.data.map(x => x[0]))
+    let max_y = Math.max(...this.data.map(x => x[1]))
 
     // like [ [x0, 0], [xn, max_y] ] where x0 and xn fall on the line of best fit
     this.best_fit = Scatter.bestFit(this.data, max_x, max_y)
@@ -29,6 +58,9 @@ class Scatter extends Component {
     let max = Math.max(max_x, max_y)
     this.ideal_fit = [ [0, 0], [max, max]]
 
+    console.log("Testing data stuff");
+    console.log(this.data);
+    console.log(this.data2);
 
     this.state = {
       series: [{
@@ -82,7 +114,7 @@ class Scatter extends Component {
             }
           },
           title: {
-            text: this.metric + " " + this.scenario_name,
+            text: this.metric + " " + this.passed_data.scenario_name,
             style: {
               fontSize:  '15px',
               color: 'white'
@@ -93,7 +125,8 @@ class Scatter extends Component {
           enabled: false //keeping track of upto 24hours * 365days * 3years = 26,000 points is likely a performance hit
         },
         title: {
-          text: this.metric + " Comparison on " + this.label,
+          // TODO: only display the 2nd part of the message if the node is valid
+          text: this.metric + " Comparison on " + this.passed_data.node,
           align: 'left',
           margin: 10,
           offsetX: 60,

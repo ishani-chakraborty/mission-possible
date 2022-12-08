@@ -12,6 +12,7 @@ import React, { useState } from "react";
 export default function DataComparison() {
 	const [curGraph, setGraph] = useState(""); //react hook
 	const default_graph = "scatter";
+
 	// let my_json = [];
 	// fetch("http://localhost:3001/api/Scenarios")
 	// 	.then((response) => response.json())
@@ -20,8 +21,9 @@ export default function DataComparison() {
 	// 		// console.log(my_json);
 	// 	});
 	// console.log(my_json);
-	let listab = [];
-	let list_to_save = listab;
+
+	let scenarios = [];
+	let list_to_save = scenarios;
 	testdb
 		.getGeyser(
 			list_to_save,
@@ -33,8 +35,8 @@ export default function DataComparison() {
 			console.error(error);
 		});
 
-	let lista = [];
-	let list_to_sav = lista;
+	let node_names = [];
+	let list_to_sav = node_names;
 	testdb
 		.getGeyser(
 			list_to_sav,
@@ -45,11 +47,14 @@ export default function DataComparison() {
 		.catch((error) => {
 			console.error(error);
 		});
+
 	// const response = fetch("http://localhost:3001/api/Scenarios");
 	// const my_json = response.json();
 	// console.log(my_json);
+
 	// Define where we store the data (ex. names stores the names of geysers)
 	let scenario_names = [];
+
 	// let namess = fetch("api/Scenarios");
 	// console.log(namess.json());
 
@@ -88,13 +93,13 @@ export default function DataComparison() {
 	};
 
 	// change which graph is displayed by using the react hook
-	const OnChangeSelectedOption = (selectedOption) => {
+	const OnChangeSelectedOptionGraph = (selectedOption) => {
 		console.log("handle change", selectedOption);
 		setGraph(selectedOption.value);
 		console.log("Now displaying graph: ", curGraph);
 	};
 
-	const showDrop = () => {
+	const showDropGraph = () => {
 		// make these elements visisble, set the default graph
 		document.getElementsByClassName("graph_dropdowns")[0].style.display =
 			"block";
@@ -104,26 +109,22 @@ export default function DataComparison() {
 	};
 
 	const pad = (s) =>{
-		s = s.toString();
-		if(s.length== 1){
-			return "0"+s;
-		}
-
-		return s;
+		// If s is less than 2 charcters long, pad the start with '0'
+		return s.toString().padStart(2, '0');
 	}
 
 	const onChangeDateSelection = (selectedOption) => {
-		// console.log(func(selectedOption[0]));
-		let start = func(selectedOption[0])
-		let end = func(selectedOption[1])
+		// console.log(toGMT(selectedOption[0]));
+		let start = toGMT(selectedOption[0])
+		let end = toGMT(selectedOption[1])
 		let s = start.getFullYear() +"-"+ pad(start.getMonth()) +"-"+ pad(start.getDate())+" "+ pad(start.getHours())
 		let e = end.getFullYear() +"-"+ pad(end.getMonth()) +"-"+ pad(end.getDate())+" "+ pad(end.getHours())
 		console.log(s,e);
 		
 	}	
 
-	const func = (today) => {
-        var gmt =today.toUTCString()
+	const toGMT = (date) => {
+        var gmt = date.toUTCString()
         // console.log(new Date( gmt));
         return new Date(gmt);
     } 
@@ -155,7 +156,7 @@ export default function DataComparison() {
 				</li>
 				<li>
 					<AsyncSelect
-						loadOptions={loadOptions(listab)}
+						loadOptions={loadOptions(scenarios)}
 						defaultOptions
 						placeholder="- Select -"
 						isClearable
@@ -163,7 +164,7 @@ export default function DataComparison() {
 				</li>
 				<li>
 					<AsyncSelect
-						loadOptions={loadOptions(listab)}
+						loadOptions={loadOptions(scenarios)}
 						defaultOptions
 						placeholder="- Select -"
 						isClearable
@@ -171,7 +172,7 @@ export default function DataComparison() {
 				</li>
 				<li>
 					<AsyncSelect
-						loadOptions={loadOptions(lista)}
+						loadOptions={loadOptions(node_names)}
 						defaultOptions
 						placeholder="- Select -"
 						isClearable
@@ -187,7 +188,7 @@ export default function DataComparison() {
 				</li>
 			</ul>
 
-			<button className="button" onClick={showDrop}>
+			<button className="button" onClick={showDropGraph}>
 				Create Graphs
 			</button>
 
@@ -197,7 +198,7 @@ export default function DataComparison() {
 			<ul className="graph_dropdowns">
 				<li>
 					<AsyncSelect
-						onChange={OnChangeSelectedOption}
+						onChange={OnChangeSelectedOptionGraph}
 						loadOptions={loadOptions(graphs)}
 						defaultOptions
 						defaultInputValue={default_graph}
@@ -207,17 +208,30 @@ export default function DataComparison() {
 				</li>
 			</ul>
 
+
+			{/* data should be a json, containing the fields:
+					"metric"        : str,
+					"scenario_name" : str,
+					"base_case"           : list[ json ],
+					"scenario_to_compare" : list[ json ]
+
+				where json contains the fields
+					metric - the value specified by "metric" (notice the difference in quotes)
+					"PERIOD_ID"  : str
+					"PNODE_NAME" : str 
+				View Scatter.js for more details
+			*/}
 			<ul className="scatter">
 				{/* Conditionally render scatter plot */}
-				{curGraph === "scatter" && <Scatter></Scatter>}
+				{curGraph === "scatter" && <Scatter data="hi"></Scatter>}
 			</ul>
 			<ul className="histogram">
 				{/* Conditionally render histogram */}
-				{curGraph === "histogram" && <Histogram></Histogram>}
+				{curGraph === "histogram" && <Histogram data="hi"></Histogram>}
 			</ul>
 			<ul className="heatmap">
 				{/* Conditionally render heatmap */}
-				{curGraph === "heatmap" && <Heatmap></Heatmap>}
+				{curGraph === "heatmap" && <Heatmap data="hi"></Heatmap>}
 			</ul>
 		</>
 	);

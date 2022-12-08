@@ -5,20 +5,25 @@ class Histogram extends Component {
 
   constructor (props) {
     super(props)
+    console.log(props.data)
 
-    // TODO: How to get this dynamically?
+    // TODO: Get this dynamically using: this.passed_data=props.data
     // This data in this format is exactly what the graph needs
     this.passed_data = {
       metric: 'LMP',
-      base_case: [30, 40, 35, 50, 49, 60, 70, 91, 125, 32, 42, 37, 52, 48, 62, 72, 93, 123],
-      scenario_to_compare: [35, 45, 40, 55, 54, 65, 75, 96, 130, 37, 47, 42, 57, 53, 67, 77, 98, 127], //+5
-      scenario_name: 'Scenario 1'
+      base_case_name: 'Base Case',
+      scenario_name: 'Scenario 1',
+      base_case: [{LMP:30}, {LMP:40}, {LMP:35}, {LMP:50}, {LMP:49}, {LMP:60}, {LMP:70}, {LMP:91},
+        {LMP:125}, {LMP:32}, {LMP:42}, {LMP:37}, {LMP:52}, {LMP:48}, {LMP:62}, {LMP:72}, {LMP:93}, {LMP:123}],
+      scenario_to_compare: [{LMP:35}, {LMP:45}, {LMP:40}, {LMP:55}, {LMP:54}, {LMP:65}, {LMP:75}, {LMP:96},
+        {LMP:130}, {LMP:37}, {LMP:47}, {LMP:42}, {LMP:57}, {LMP:53}, {LMP:67}, {LMP:77}, {LMP:98}, {LMP:127}] //+5
     }
+    
     
     // from the passed data, construct this information
     // List[number] : the metric for each datapoint
-    this.data1 = this.passed_data.base_case
-    this.data2 = this.passed_data.scenario_to_compare
+    this.data1 = this.passed_data.base_case.map(x => x[this.passed_data.metric]);
+    this.data2 = this.passed_data.scenario_to_compare.map(x => x[this.passed_data.metric]);
 
     // Get the mean, median, and standard deviation of the data
     let statistics1 = Histogram.getStatistics(this.data1)
@@ -56,7 +61,7 @@ class Histogram extends Component {
     const options = (id) => {
       // id===1 when base case => 1st set of data/statistics
       // id===2 when scenario to compare
-      let scenario = (id===1) ? 'Base Case' : this.passed_data.scenario_name;
+      let scenario = (id===1) ? this.passed_data.base_case_name : this.passed_data.scenario_name;
       let x_title =  (id===1) ? '' : this.passed_data.metric; // Only display title on bottom
       let stats =    (id===1) ? this.statisticsString1 : this.statisticsString2
       let color =    (id===1) ? "#ff4040" : "#244ae3"

@@ -58,21 +58,21 @@ router.get("/:id/:scenario/:pnode_name", (req, res) => {
 router.get("/:id/:scenario/:pnode_name/:metric", (req, res) => {
 	if (req.params.scenario === "0") {
 		pool.query(
-			`SELECT "${req.params.metric}" from "${req.params.id}" 
+			`SELECT "${req.params.metric}", "PERIOD_ID", "PNODE_NAME" from "${req.params.id}" 
 		 WHERE "PNODE_NAME"=${req.params.pnode_name}`
 		)
 			.then((result) => res.send(result.rows))
 			.catch((err) => res.send(err.message));
 	} else if (req.params.pnode_name === "0") {
 		pool.query(
-			`SELECT "${req.params.metric}" from "${req.params.id}" 
+			`SELECT "${req.params.metric}", "PERIOD_ID", "PNODE_NAME" from "${req.params.id}" 
 		 WHERE "SCENARIO_ID"=${req.params.scenario}`
 		)
 			.then((result) => res.send(result.rows))
 			.catch((err) => res.send(err.message));
 	} else {
 		pool.query(
-			`SELECT "${req.params.metric}" from "${req.params.id}"
+			`SELECT "${req.params.metric}", "PERIOD_ID", "PNODE_NAME" from "${req.params.id}"
 		 WHERE "SCENARIO_ID"=${req.params.scenario} 
 		 AND "PNODE_NAME"=${req.params.pnode_name}`
 		)
@@ -111,7 +111,7 @@ router.get(
 	(req, res) => {
 		if (req.params.scenario === 0) {
 			pool.query(
-				`SELECT "${req.params.metric}" from "${req.params.id}" 
+				`SELECT "${req.params.metric}", "PERIOD_ID", "PNODE_NAME" from "${req.params.id}" 
 		WHERE "PNODE_NAME"=${req.params.pnode_name}
 		AND "PERIOD_ID"
 		BETWEEN '${req.params.startdate}'   
@@ -121,7 +121,7 @@ router.get(
 				.catch((err) => res.send(err.message));
 		} else if (req.params.pnode_name === 0) {
 			pool.query(
-				`SELECT "${req.params.metric}" from "${req.params.id}" 
+				`SELECT "${req.params.metric}", "PERIOD_ID", "PNODE_NAME" from "${req.params.id}" 
 		WHERE "SCENARIO_ID"=${req.params.scenario}
 		AND "PERIOD_ID"
 		BETWEEN '${req.params.startdate}'   
@@ -131,7 +131,7 @@ router.get(
 				.catch((err) => res.send(err.message));
 		} else {
 			pool.query(
-				`SELECT "${req.params.metric}" from "${req.params.id}"
+				`SELECT "${req.params.metric}", "PERIOD_ID", "PNODE_NAME" from "${req.params.id}"
 		 WHERE "SCENARIO_ID"=${req.params.scenario} 
 		 AND "PNODE_NAME"=${req.params.pnode_name}
 		 AND "PERIOD_ID"
