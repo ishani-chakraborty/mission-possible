@@ -53,10 +53,13 @@ export default function DataComparison() {
 	// let namess = fetch("api/Scenarios");
 	// console.log(namess.json());
 
-	let metrics = [
-		{ value: "lmp", label: "LMP" },
-		{ value: "mw", label: "MW" },
-	];
+	let metrics = [];
+	let lts = metrics;
+	testdb
+		.getMetrics(lts)
+		.catch((error) => {
+			console.error(error);
+		});
 
 	const graphs = [
 		{ value: "scatter", label: "scatter" },
