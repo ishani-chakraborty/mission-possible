@@ -5,25 +5,30 @@ class Histogram extends Component {
 
   constructor (props) {
     super(props)
-    console.log(props.data)
+    // console.log(props.data)
 
     // TODO: Get this dynamically using: this.passed_data=props.data
     // This data in this format is exactly what the graph needs
-    this.passed_data = {
-      metric: 'LMP',
-      base_case_name: 'Base Case',
-      scenario_name: 'Scenario 1',
-      base_case: [{LMP:30}, {LMP:40}, {LMP:35}, {LMP:50}, {LMP:49}, {LMP:60}, {LMP:70}, {LMP:91},
-        {LMP:125}, {LMP:32}, {LMP:42}, {LMP:37}, {LMP:52}, {LMP:48}, {LMP:62}, {LMP:72}, {LMP:93}, {LMP:123}],
-      scenario_to_compare: [{LMP:35}, {LMP:45}, {LMP:40}, {LMP:55}, {LMP:54}, {LMP:65}, {LMP:75}, {LMP:96},
-        {LMP:130}, {LMP:37}, {LMP:47}, {LMP:42}, {LMP:57}, {LMP:53}, {LMP:67}, {LMP:77}, {LMP:98}, {LMP:127}] //+5
-    }
+    // this.passed_data = {
+    //   metric: 'LMP',
+    //   base_case_name: 'Base Case',
+    //   scenario_name: 'Scenario 1',
+    //   base_case: [{LMP:30}, {LMP:40}, {LMP:35}, {LMP:50}, {LMP:49}, {LMP:60}, {LMP:70}, {LMP:91},
+    //     {LMP:125}, {LMP:32}, {LMP:42}, {LMP:37}, {LMP:52}, {LMP:48}, {LMP:62}, {LMP:72}, {LMP:93}, {LMP:123}],
+    //   scenario_to_compare: [{LMP:35}, {LMP:45}, {LMP:40}, {LMP:55}, {LMP:54}, {LMP:65}, {LMP:75}, {LMP:96},
+    //     {LMP:130}, {LMP:37}, {LMP:47}, {LMP:42}, {LMP:57}, {LMP:53}, {LMP:67}, {LMP:77}, {LMP:98}, {LMP:127}] //+5
+    // }
     
+    this.passed_data = props.data
+    const getMetric = (entry) => {
+      let val = entry[this.passed_data.metric];
+      return parseFloat(val)
+    }
     
     // from the passed data, construct this information
     // List[number] : the metric for each datapoint
-    this.data1 = this.passed_data.base_case.map(x => x[this.passed_data.metric]);
-    this.data2 = this.passed_data.scenario_to_compare.map(x => x[this.passed_data.metric]);
+    this.data1 = this.passed_data.base_case.map(x => getMetric(x));
+    this.data2 = this.passed_data.scenario_to_compare.map(x => getMetric(x));
 
     // Get the mean, median, and standard deviation of the data
     let statistics1 = Histogram.getStatistics(this.data1)
@@ -128,7 +133,7 @@ class Histogram extends Component {
           },
           min: 0,
           max: this.tallest_bin,
-          forceNiceScale: true,
+          forceNiceScale: (this.tallest_bin > 95) ? false : true,
           labels: {
             formatter: (x) => roundToDecimals(x, 0),
             style: { colors: 'white' }
@@ -156,7 +161,7 @@ class Histogram extends Component {
           }
         },
         title: {
-          text: scenario,
+          text: this.passed_data.metric + " Distribution on " + scenario + ", " + this.passed_data.node,
           floating: true,
           align: 'left',
           margin: 10,
@@ -278,12 +283,14 @@ class Histogram extends Component {
     return (
       <div className="histogram">
         <table>
-          <tr>
-            <Chart options={this.state.options1} series={this.state.series1} type="bar" width="600" />
-          </tr>
-          <tr>
-            <Chart options={this.state.options2} series={this.state.series2} type="bar" width="600" />
-          </tr>
+          <tbody>
+            <tr>
+              <Chart options={this.state.options1} series={this.state.series1} type="bar" width="600" />
+            </tr>
+            <tr>
+              <Chart options={this.state.options2} series={this.state.series2} type="bar" width="600" />
+            </tr>
+          </tbody>
 			  </table>
       </div>
     );

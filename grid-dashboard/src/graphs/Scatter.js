@@ -5,35 +5,42 @@ class Scatter extends Component {
 
   constructor (props) {
     super(props)
-    console.log(props.data)
+    // console.log(props.data)
 
-    // TODO: Get this dynamically using: this.passed_data=props.data
     // This data in this format is exactly what the graph needs
-    this.passed_data = {
-      node: "Node",
-      metric: 'LMP',
-      base_case_name: 'Base Case',
-      scenario_name: 'Scenario',
-      base_case: [{LMP:30, PERIOD_ID: "2020-07-17 01"}, {LMP:40, PERIOD_ID: "2020-07-17 02"}, {LMP:35, PERIOD_ID: "2020-07-17 03"},
-                  {LMP:50, PERIOD_ID: "2020-07-17 04"}, {LMP:49, PERIOD_ID: "2020-07-17 05"}, {LMP:60, PERIOD_ID: "2020-07-17 06"},
-                  {LMP:70, PERIOD_ID: "2020-07-17 07"}, {LMP:91, PERIOD_ID: "2020-07-17 08"}, {LMP:125, PERIOD_ID: "2020-07-17 09"},
-                  {LMP:32, PERIOD_ID: "2020-07-17 10"}, {LMP:42, PERIOD_ID: "2020-07-17 11"}, {LMP:37, PERIOD_ID: "2020-07-17 12"},
-                  {LMP:52, PERIOD_ID: "2020-07-17 13"}, {LMP:48, PERIOD_ID: "2020-07-17 14"}, {LMP:62, PERIOD_ID: "2020-07-17 15"},
-                  {LMP:72, PERIOD_ID: "2020-07-17 16"}, {LMP:93, PERIOD_ID: "2020-07-17 17"}, {LMP:120, PERIOD_ID: "2020-07-17 18"}],
-      scenario_to_compare: [{LMP:28, PERIOD_ID: "2020-07-17 01"}, {LMP:42, PERIOD_ID: "2020-07-17 02"}, {LMP:37, PERIOD_ID: "2020-07-17 03"},
-                            {LMP:48, PERIOD_ID: "2020-07-17 04"}, {LMP:47, PERIOD_ID: "2020-07-17 05"}, {LMP:60, PERIOD_ID: "2020-07-17 06"},
-                            {LMP:70, PERIOD_ID: "2020-07-17 07"}, {LMP:84, PERIOD_ID: "2020-07-17 08"}, {LMP:120, PERIOD_ID: "2020-07-17 09"},
-                            {LMP:35, PERIOD_ID: "2020-07-17 10"}, {LMP:43, PERIOD_ID: "2020-07-17 11"}, {LMP:36, PERIOD_ID: "2020-07-17 12"},
-                            {LMP:50, PERIOD_ID: "2020-07-17 13"}, {LMP:50, PERIOD_ID: "2020-07-17 14"}, {LMP:50, PERIOD_ID: "2020-07-17 15"},
-                            {LMP:72, PERIOD_ID: "2020-07-17 16"}, {LMP:93, PERIOD_ID: "2020-07-17 17"}, {LMP:60, PERIOD_ID: "2020-07-17 18"}]
-    }
+    // FYI, the dummy data is hard to read: each entry contains a unique PERIOD_ID with an LMP value, they all have the same node
+    // this.passed_data = {
+    //   node: "Node",
+    //   metric: 'LMP',
+    //   base_case_name: 'Base Case',
+    //   scenario_name: 'Scenario',
+    //   base_case: [{LMP:30, PERIOD_ID: "2020-07-17 01", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:40, PERIOD_ID: "2020-07-17 02", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:35,  PERIOD_ID: "2020-07-17 03", PNODE_NAME: "UN.ALTA 345 UALT"},
+    //               {LMP:50, PERIOD_ID: "2020-07-17 04", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:49, PERIOD_ID: "2020-07-17 05", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:60,  PERIOD_ID: "2020-07-17 06", PNODE_NAME: "UN.ALTA 345 UALT"},
+    //               {LMP:70, PERIOD_ID: "2020-07-17 07", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:91, PERIOD_ID: "2020-07-17 08", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:125, PERIOD_ID: "2020-07-17 09", PNODE_NAME: "UN.ALTA 345 UALT"},
+    //               {LMP:32, PERIOD_ID: "2020-07-17 10", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:42, PERIOD_ID: "2020-07-17 11", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:37,  PERIOD_ID: "2020-07-17 12", PNODE_NAME: "UN.ALTA 345 UALT"},
+    //               {LMP:52, PERIOD_ID: "2020-07-17 13", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:48, PERIOD_ID: "2020-07-17 14", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:62,  PERIOD_ID: "2020-07-17 15", PNODE_NAME: "UN.ALTA 345 UALT"},
+    //               {LMP:72, PERIOD_ID: "2020-07-17 16", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:93, PERIOD_ID: "2020-07-17 17", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:120, PERIOD_ID: "2020-07-17 18", PNODE_NAME: "UN.ALTA 345 UALT"}],
+    //   scenario_to_compare: [{LMP:28, PERIOD_ID: "2020-07-17 01", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:42, PERIOD_ID: "2020-07-17 02", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:37,  PERIOD_ID: "2020-07-17 03", PNODE_NAME: "UN.ALTA 345 UALT"},
+    //                         {LMP:48, PERIOD_ID: "2020-07-17 04", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:47, PERIOD_ID: "2020-07-17 05", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:60,  PERIOD_ID: "2020-07-17 06", PNODE_NAME: "UN.ALTA 345 UALT"},
+    //                         {LMP:70, PERIOD_ID: "2020-07-17 07", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:84, PERIOD_ID: "2020-07-17 08", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:120, PERIOD_ID: "2020-07-17 09", PNODE_NAME: "UN.ALTA 345 UALT"},
+    //                         {LMP:35, PERIOD_ID: "2020-07-17 10", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:43, PERIOD_ID: "2020-07-17 11", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:36,  PERIOD_ID: "2020-07-17 12", PNODE_NAME: "UN.ALTA 345 UALT"},
+    //                         {LMP:50, PERIOD_ID: "2020-07-17 13", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:50, PERIOD_ID: "2020-07-17 14", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:50,  PERIOD_ID: "2020-07-17 15", PNODE_NAME: "UN.ALTA 345 UALT"},
+    //                         {LMP:72, PERIOD_ID: "2020-07-17 16", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:93, PERIOD_ID: "2020-07-17 17", PNODE_NAME: "UN.ALTA 345 UALT"}, {LMP:60,  PERIOD_ID: "2020-07-17 18", PNODE_NAME: "UN.ALTA 345 UALT"}]
+    // }
 
+    this.passed_data = props.data;
     this.metric = this.passed_data.metric
     
-    // TODO: add an extra map layer for the node
     // transform the base case into a map
-    let datetimeMap = new Map();
+    // {PNODE_Name : {PERIOD_ID : metric} }
+    let nodeDatetimeMap = new Map();
     this.passed_data.base_case.forEach( baseData => {
+      if (! nodeDatetimeMap.has(baseData.PNODE_NAME)) {
+        nodeDatetimeMap.set(baseData.PNODE_NAME, new Map())
+      }
+      
+      // gets the map corresponding to the node, and creates an entry maping datetime to the metric
+      let datetimeMap = nodeDatetimeMap.get(baseData.PNODE_NAME);
       datetimeMap.set(baseData.PERIOD_ID, baseData[this.metric]);
     });
 
@@ -42,25 +49,28 @@ class Scatter extends Component {
     // match the scenario data (scenario_to_compare) to the base case
     // If it matches, add it to the data
     this.passed_data.scenario_to_compare.forEach( scenarioData => {
-      if (datetimeMap.has(scenarioData.PERIOD_ID)) {
-        let match = [datetimeMap.get(scenarioData.PERIOD_ID), scenarioData[this.metric]]
-        this.data.push(match);
+      // if the node is found AND the datetime for that node was found:
+        // Transform the metric data into a datapoint for the graph
+      if (nodeDatetimeMap.has(scenarioData.PNODE_NAME)) {
+        let datetimeMap = nodeDatetimeMap.get(scenarioData.PNODE_NAME);
+        if (datetimeMap.has(scenarioData.PERIOD_ID)) {
+          let match = [ datetimeMap.get(scenarioData.PERIOD_ID), scenarioData[this.metric] ]
+          this.data.push(match);
+        }
       }
     });
     // console.log(this.data) // debug, should look like [ [x1, y1], [x2, y2], ..., [xn, yn] ]
 
     let max_x = Math.max(...this.data.map(x => x[0]))
     let max_y = Math.max(...this.data.map(x => x[1]))
+    let min_x = Math.min(...this.data.map(x => x[0]))
+    let min_y = Math.min(...this.data.map(x => x[1]))
+    let max   = Math.max(max_x, max_y)
+    let min   = Math.min(min_x, min_y)
 
-    // like [ [x0, 0], [xn, max_y] ] where x0 and xn fall on the line of best fit
-    this.best_fit = Scatter.bestFit(this.data, max_x, max_y)
-
-    let max = Math.max(max_x, max_y)
-    this.ideal_fit = [ [0, 0], [max, max]]
-
-    console.log("Testing data stuff");
-    console.log(this.data);
-    console.log(this.data2);
+    // best_fit fits the data, ideal_fit is y=x: where the scenario matches up with the base_case
+    this.best_fit = Scatter.bestFit(this.data, max_x, max_y, min_x, min_y)
+    this.ideal_fit = [ [min, min], [max, max]]
 
     this.state = {
       series: [{
@@ -83,7 +93,7 @@ class Scatter extends Component {
         },
         xaxis: {
           type: 'numeric',
-          min: 0,
+          min: min,
           tickAmount: 5,
           labels: {
             formatter: function(val) {
@@ -94,8 +104,8 @@ class Scatter extends Component {
             }
           },
           title: {
-            text: this.metric + " Base Case",
-            offsetY: 90,
+            text: this.metric + " " + this.passed_data.base_case_name,
+            offsetY: 75,
             style: {
               fontSize: '15px',
               color: 'white'
@@ -103,7 +113,7 @@ class Scatter extends Component {
           }
         },
         yaxis: {
-          min: 0,
+          min: min,
           tickAmount: 5,
           labels: {
             formatter: function(val) {
@@ -130,7 +140,7 @@ class Scatter extends Component {
           align: 'left',
           margin: 10,
           offsetX: 60,
-          offsetY: 15,
+          offsetY: -5,
           style: {
             fontSize:  '18px',
             fontWeight:  'bold',
@@ -140,8 +150,8 @@ class Scatter extends Component {
         legend: {
           position: 'top',
           floating: true,
-          offsetX: 250,
-          offsetY: -15,
+          offsetX: 310,
+          offsetY: -14,
           labels: {
             colors: 'white'
           }
@@ -151,7 +161,7 @@ class Scatter extends Component {
 
   }
 
-  static bestFit(data, max_x, max_y) {
+  static bestFit(data, max_x, max_y, min_x, min_y) {
     // using a linear least squares algorithim
 
     // sum the x-terms together and the y-terms together
@@ -167,8 +177,10 @@ class Scatter extends Component {
     let m = (avgXY - meanX * meanY) / (avgXSquared - meanX * meanX)
     let b = m * meanX - meanY
     
-    // originally [[0, -b], [max_x, m*max_x - b]], but that doesn't touch y=0, y=max_y for graph scaling
-    return [[b / m, 0], [(max_y + b) / m, max_y]]
+    // originally [[0, -b], [max_x, m*max_x - b]], but that isn't as nice for graph scaling
+    let p1 = [(min_y + b) / m, min_y]
+    let p2 = [(max_y + b) / m, max_y]
+    return [p1, p2]
   }
 
 
