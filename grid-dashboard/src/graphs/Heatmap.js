@@ -4,6 +4,7 @@ import Chart from 'react-apexcharts'
 class Heatmap extends Component {
   constructor (props) {
     super(props)
+    console.log(props.data)
 
     //TODO: how to get this, use the MAPE formula
     let my_data = [2, 4, 6, 8, 10, 4, 14, 18, 18, 24, 22, 20]

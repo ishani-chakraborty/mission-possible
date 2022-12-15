@@ -1,8 +1,8 @@
 import AsyncSelect from "react-select/async";
 import "./dc_styles.css";
 import { DateRangePicker } from "rsuite";
-import * as dbInterface from "../DatabaseInterface.js";
-import * as testdb from "../testdb.js";
+// import * as dbInterface from "../DatabaseInterface.js";
+import * as api_calls from "../api_calls.js";
 import Scatter from "../graphs/Scatter";
 import Heatmap from "../graphs/Heatmap";
 import Histogram from "../graphs/Histogram";
@@ -10,8 +10,21 @@ import Histogram from "../graphs/Histogram";
 import React, { useState } from "react";
 
 export default function DataComparison() {
-	const [curGraph, setGraph] = useState(""); //react hook
+	// Define react hooks to save info from the dropdowns
+
+	// This info is used in the data query
+	const [curStartDate, setStartDate] = useState(null);
+	const [curEndDate,   setEndDate  ] = useState(null);
+	const [curBaseCase,  setBaseCase ] = useState(null);
+	const [curScenario,  setScenario ] = useState(null);
+	const [curNode,      setNode     ] = useState(null);
+	const [curMetric,    setMetric   ] = useState(null);
+
+	// This info is used for graphing
+	const [curGraph,     setGraph   ] = useState(null);
+	const [curData,      setData    ] = useState(null); // change this to null
 	const default_graph = "scatter";
+
 	// let my_json = [];
 	// fetch("http://localhost:3001/api/Scenarios")
 	// 	.then((response) => response.json())
@@ -20,11 +33,11 @@ export default function DataComparison() {
 	// 		// console.log(my_json);
 	// 	});
 	// console.log(my_json);
-	let listab = [];
-	let list_to_save = listab;
-	testdb
-		.getGeyser(
-			list_to_save,
+
+	let scenarios = [];
+	api_calls
+		.populateDropdown(
+			scenarios,
 			"http://localhost:3001/api/Scenarios",
 			"SCENARIO_ID",
 			"SCENRAIO_NAME"
@@ -33,44 +46,56 @@ export default function DataComparison() {
 			console.error(error);
 		});
 
-	let lista = [];
-	let list_to_sav = lista;
-	testdb
-		.getGeyser(
-			list_to_sav,
+	let node_names = [];
+	api_calls
+		.populateDropdown(
+			node_names,
 			"http://localhost:3001/api/Node_Data",
-			"SCENARIO_ID",
+			"PNODE_NAME",
 			"PNODE_NAME"
 		)
 		.catch((error) => {
 			console.error(error);
 		});
+
 	// const response = fetch("http://localhost:3001/api/Scenarios");
 	// const my_json = response.json();
 	// console.log(my_json);
+
 	// Define where we store the data (ex. names stores the names of geysers)
-	let scenario_names = [];
+	// let scenario_names = [];
+
 	// let namess = fetch("api/Scenarios");
 	// console.log(namess.json());
 
 	let metrics = [
-		{ value: "lmp", label: "LMP" },
-		{ value: "mw", label: "MW" },
+		{ value: "LMP", label: "LMP" },
+		{ value: "MW", label: "MW" },
 	];
 
 	const graphs = [
-		{ value: "scatter", label: "scatter" },
-		{ value: "heatmap", label: "heatmap" },
-		{ value: "histogram", label: "histogram" },
+		{ value: "scatter", label: "Scatter" },
+		{ value: "heatmap", label: "Heatmap" },
+		{ value: "histogram", label: "Histogram" },
 	];
+
+	const scenarioIdToName = (ID) => {
+		let label = ID;
+		scenarios.forEach( entry => {
+			if (entry.value === ID) {
+				label = entry.label;
+			}
+		});
+		return label;
+	}
 
 	// populate the dropdown lists
 	// Use a specific REST CALL to get a list of the geysers, saving their names
-	let query = "/geysers";
-	let list_to_save_to = scenario_names;
-	dbInterface.getGeyserInfo(query, list_to_save_to).catch((error) => {
-		console.error(error);
-	});
+	// let query = "/geysers";
+	// let list_to_save_to = scenario_names;
+	// dbInterface.getGeyserInfo(query, list_to_save_to).catch((error) => {
+	// 	console.error(error);
+	// });
 
 	// Search a specific search list (source) for seachValue
 	// Usable by AsyncSelect after specifying the source list
@@ -87,44 +112,79 @@ export default function DataComparison() {
 		};
 	};
 
-	// change which graph is displayed by using the react hook
-	const OnChangeSelectedOption = (selectedOption) => {
-		console.log("handle change", selectedOption);
-		setGraph(selectedOption.value);
-		console.log("Now displaying graph: ", curGraph);
-	};
-
-	const showDrop = () => {
-		// make these elements visisble, set the default graph
-		document.getElementsByClassName("graph_dropdowns")[0].style.display =
-			"block";
-		document.getElementsByClassName("graph_headers")[0].style.display =
-			"block";
-		setGraph(default_graph);
-	};
-
-	const pad = (s) =>{
-		s = s.toString();
-		if(s.length== 1){
-			return "0"+s;
+	// Change a react-hook when a dropdown value changes
+	const OnChangeReactHook = (setFunction) => {
+		return (selectedOption) => {
+			console.log("handle react-hook change", selectedOption);
+			if (selectedOption === null) {
+				setFunction(null);
+			} else {
+				setFunction(selectedOption.value);
+			}
 		}
-
-		return s;
 	}
 
+
+	const createGraph = async () => {
+		console.log("pushed");
+
+		// Validate that the "base case", "scenario", and "metric" have been chosen
+		let err_msg = "";
+		if (curBaseCase === null) { err_msg += "\"Scenario 1\" must be specified to generate a graph.\n"; }
+		if (curScenario === null) { err_msg += "\"Scenario 2\" must be specified to generate a graph.\n"; }
+		if (curNode === null)     { err_msg += "\"Node Name\" must be specified to generate a graph.\n"; }
+		if (curMetric === null)   { err_msg += "\"Metric\" must be specified to generate a graph.\n"; }
+
+		if (err_msg !== "") {
+			// console.log(err_msg);
+			window.alert(err_msg);
+			return;
+		}
+
+		// Only if the required fields have been selected will we get here
+		// Make a REST api call to get the data, returning a JSON
+		await api_calls
+			.updateData(
+				setData,
+				curBaseCase,
+				curScenario,
+				curMetric,
+				curNode,
+				curStartDate,
+				curEndDate,
+				scenarioIdToName
+			).catch((error) => {
+				console.error(error);
+			});
+
+		// Finally, if the graph isn't visible make sure it is
+		if (curGraph === null) {
+			// make these elements visisble, set the default graph
+			document.getElementsByClassName("graph_dropdowns")[0].style.display = "block";
+			document.getElementsByClassName("graph_headers")[0].style.display   = "block";
+			setGraph(default_graph);
+		}
+	};
+
 	const onChangeDateSelection = (selectedOption) => {
-		// console.log(func(selectedOption[0]));
-		let start = func(selectedOption[0])
-		let end = func(selectedOption[1])
+		// console.log(toGMT(selectedOption[0]));
+		let start = toGMT(selectedOption[0])
+		let end = toGMT(selectedOption[1])
 		let s = start.getFullYear() +"-"+ pad(start.getMonth()) +"-"+ pad(start.getDate())+" "+ pad(start.getHours())
 		let e = end.getFullYear() +"-"+ pad(end.getMonth()) +"-"+ pad(end.getDate())+" "+ pad(end.getHours())
-		console.log(s,e);
-		
-	}	
+		// console.log(s,e);
+		setStartDate(s);
+		setEndDate(e);
+	}
 
-	const func = (today) => {
-        var gmt =today.toUTCString()
-        // console.log(new Date( gmt));
+	const pad = (s) =>{
+		// If s is less than 2 charcters long, pad the start with '0'
+		return s.toString().padStart(2, '0');
+	}
+
+	const toGMT = (date) => {
+        var gmt = date.toUTCString()
+        // console.log(new Date(gmt));
         return new Date(gmt);
     } 
 
@@ -155,7 +215,8 @@ export default function DataComparison() {
 				</li>
 				<li>
 					<AsyncSelect
-						loadOptions={loadOptions(listab)}
+						onChange={OnChangeReactHook(setBaseCase)}
+						loadOptions={loadOptions(scenarios)}
 						defaultOptions
 						placeholder="- Select -"
 						isClearable
@@ -163,7 +224,8 @@ export default function DataComparison() {
 				</li>
 				<li>
 					<AsyncSelect
-						loadOptions={loadOptions(listab)}
+						onChange={OnChangeReactHook(setScenario)}
+						loadOptions={loadOptions(scenarios)}
 						defaultOptions
 						placeholder="- Select -"
 						isClearable
@@ -171,7 +233,8 @@ export default function DataComparison() {
 				</li>
 				<li>
 					<AsyncSelect
-						loadOptions={loadOptions(lista)}
+						onChange={OnChangeReactHook(setNode)}
+						loadOptions={loadOptions(node_names)}
 						defaultOptions
 						placeholder="- Select -"
 						isClearable
@@ -179,6 +242,7 @@ export default function DataComparison() {
 				</li>
 				<li>
 					<AsyncSelect
+						onChange={OnChangeReactHook(setMetric)}
 						loadOptions={loadOptions(metrics)}
 						defaultOptions
 						placeholder="- Select -"
@@ -187,7 +251,8 @@ export default function DataComparison() {
 				</li>
 			</ul>
 
-			<button className="button" onClick={showDrop}>
+			{/* createGraph */}
+			<button className="button" onClick={createGraph}> 
 				Create Graphs
 			</button>
 
@@ -197,7 +262,7 @@ export default function DataComparison() {
 			<ul className="graph_dropdowns">
 				<li>
 					<AsyncSelect
-						onChange={OnChangeSelectedOption}
+						onChange={OnChangeReactHook(setGraph)}
 						loadOptions={loadOptions(graphs)}
 						defaultOptions
 						defaultInputValue={default_graph}
@@ -207,18 +272,29 @@ export default function DataComparison() {
 				</li>
 			</ul>
 
+			{/* Conditionally render only one graph */}
+			{/* data should be a json, containing the fields:
+					"metric"        : str,
+					"scenario_name" : str,
+					"base_case"           : list[ json ],
+					"scenario_to_compare" : list[ json ]
+
+				where json contains the fields
+					metric (name specified by "metric", notice the difference in quotes) : float
+					"PERIOD_ID"  : str
+					"PNODE_NAME" : str 
+				View Scatter.js for more details
+			*/}
 			<ul className="scatter">
-				{/* Conditionally render scatter plot */}
-				{curGraph === "scatter" && <Scatter></Scatter>}
+				{curGraph === "scatter" && <Scatter data={curData}></Scatter>}
 			</ul>
 			<ul className="histogram">
-				{/* Conditionally render histogram */}
-				{curGraph === "histogram" && <Histogram></Histogram>}
+				{curGraph === "histogram" && <Histogram data={curData}></Histogram>}
 			</ul>
 			<ul className="heatmap">
-				{/* Conditionally render heatmap */}
-				{curGraph === "heatmap" && <Heatmap></Heatmap>}
+				{curGraph === "heatmap" && <Heatmap data={curData}></Heatmap>}
 			</ul>
+			
 		</>
 	);
 }
