@@ -14,15 +14,15 @@ export default function DataComparison() {
 
 	// This info is used in the data query
 	const [curStartDate, setStartDate] = useState(null);
-	const [curEndDate,   setEndDate  ] = useState(null);
-	const [curBaseCase,  setBaseCase ] = useState(null);
-	const [curScenario,  setScenario ] = useState(null);
-	const [curNode,      setNode     ] = useState(null);
-	const [curMetric,    setMetric   ] = useState(null);
+	const [curEndDate, setEndDate] = useState(null);
+	const [curBaseCase, setBaseCase] = useState(null);
+	const [curScenario, setScenario] = useState(null);
+	const [curNode, setNode] = useState(null);
+	const [curMetric, setMetric] = useState(null);
 
 	// This info is used for graphing
-	const [curGraph,     setGraph   ] = useState(null);
-	const [curData,      setData    ] = useState(null); // change this to null
+	const [curGraph, setGraph] = useState(null);
+	const [curData, setData] = useState(null); // change this to null
 	const default_graph = "scatter";
 
 	// let my_json = [];
@@ -81,13 +81,13 @@ export default function DataComparison() {
 
 	const scenarioIdToName = (ID) => {
 		let label = ID;
-		scenarios.forEach( entry => {
+		scenarios.forEach((entry) => {
 			if (entry.value === ID) {
 				label = entry.label;
 			}
 		});
 		return label;
-	}
+	};
 
 	// populate the dropdown lists
 	// Use a specific REST CALL to get a list of the geysers, saving their names
@@ -121,19 +121,26 @@ export default function DataComparison() {
 			} else {
 				setFunction(selectedOption.value);
 			}
-		}
-	}
-
+		};
+	};
 
 	const createGraph = async () => {
 		console.log("pushed");
 
 		// Validate that the "base case", "scenario", and "metric" have been chosen
 		let err_msg = "";
-		if (curBaseCase === null) { err_msg += "\"Scenario 1\" must be specified to generate a graph.\n"; }
-		if (curScenario === null) { err_msg += "\"Scenario 2\" must be specified to generate a graph.\n"; }
-		if (curNode === null)     { err_msg += "\"Node Name\" must be specified to generate a graph.\n"; }
-		if (curMetric === null)   { err_msg += "\"Metric\" must be specified to generate a graph.\n"; }
+		if (curBaseCase === null) {
+			err_msg += '"Scenario 1" must be specified to generate a graph.\n';
+		}
+		if (curScenario === null) {
+			err_msg += '"Scenario 2" must be specified to generate a graph.\n';
+		}
+		// if (curNode === null) {
+		// 	err_msg += '"Node Name" must be specified to generate a graph.\n';
+		// }
+		if (curMetric === null) {
+			err_msg += '"Metric" must be specified to generate a graph.\n';
+		}
 
 		if (err_msg !== "") {
 			// console.log(err_msg);
@@ -153,40 +160,65 @@ export default function DataComparison() {
 				curStartDate,
 				curEndDate,
 				scenarioIdToName
-			).catch((error) => {
+			)
+			.catch((error) => {
 				console.error(error);
 			});
 
 		// Finally, if the graph isn't visible make sure it is
 		if (curGraph === null) {
 			// make these elements visisble, set the default graph
-			document.getElementsByClassName("graph_dropdowns")[0].style.display = "block";
-			document.getElementsByClassName("graph_headers")[0].style.display   = "block";
-			setGraph(default_graph);
+			document.getElementsByClassName(
+				"graph_dropdowns"
+			)[0].style.display = "block";
+			document.getElementsByClassName("graph_headers")[0].style.display =
+				"block";
 		}
+		setGraph(default_graph);
 	};
 
 	const onChangeDateSelection = (selectedOption) => {
 		// console.log(toGMT(selectedOption[0]));
-		let start = toGMT(selectedOption[0])
-		let end = toGMT(selectedOption[1])
-		let s = start.getFullYear() +"-"+ pad(start.getMonth()) +"-"+ pad(start.getDate())+" "+ pad(start.getHours())
-		let e = end.getFullYear() +"-"+ pad(end.getMonth()) +"-"+ pad(end.getDate())+" "+ pad(end.getHours())
-		// console.log(s,e);
-		setStartDate(s);
-		setEndDate(e);
-	}
+		if (selectedOption !== null && selectedOption !== undefined) {
+			let start = toGMT(selectedOption[0]);
+			let end = toGMT(selectedOption[1]);
+			let s =
+				start.getFullYear() +
+				"-" +
+				pad(start.getMonth() + 1) +
+				"-" +
+				pad(start.getDate()) +
+				" " +
+				pad(start.getHours());
+			let e =
+				end.getFullYear() +
+				"-" +
+				pad(end.getMonth() + 1) +
+				"-" +
+				pad(end.getDate()) +
+				" " +
+				pad(end.getHours());
+			// console.log(s,e);
+			setStartDate(s);
+			setEndDate(e);
+			console.log(s);
+			console.log(e);
+		} else {
+			setStartDate(null);
+			setEndDate(null);
+		}
+	};
 
-	const pad = (s) =>{
+	const pad = (s) => {
 		// If s is less than 2 charcters long, pad the start with '0'
-		return s.toString().padStart(2, '0');
-	}
+		return s.toString().padStart(2, "0");
+	};
 
 	const toGMT = (date) => {
-        var gmt = date.toUTCString()
-        // console.log(new Date(gmt));
-        return new Date(gmt);
-    } 
+		var gmt = date.toUTCString();
+		// console.log(new Date(gmt));
+		return new Date(gmt);
+	};
 
 	return (
 		<>
@@ -204,7 +236,7 @@ export default function DataComparison() {
 			<ul className="dropdowns">
 				<li>
 					<DateRangePicker
-						onChange = {onChangeDateSelection}
+						onChange={onChangeDateSelection}
 						format="yyyy-MM-dd hh:mm aa"
 						showMeridian
 						defaultCalendarValue={[
@@ -252,7 +284,7 @@ export default function DataComparison() {
 			</ul>
 
 			{/* createGraph */}
-			<button className="button" onClick={createGraph}> 
+			<button className="button" onClick={createGraph}>
 				Create Graphs
 			</button>
 
@@ -289,12 +321,13 @@ export default function DataComparison() {
 				{curGraph === "scatter" && <Scatter data={curData}></Scatter>}
 			</ul>
 			<ul className="histogram">
-				{curGraph === "histogram" && <Histogram data={curData}></Histogram>}
+				{curGraph === "histogram" && (
+					<Histogram data={curData}></Histogram>
+				)}
 			</ul>
 			<ul className="heatmap">
 				{curGraph === "heatmap" && <Heatmap data={curData}></Heatmap>}
 			</ul>
-			
 		</>
 	);
 }
