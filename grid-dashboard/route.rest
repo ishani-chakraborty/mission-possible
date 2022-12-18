@@ -38,7 +38,7 @@ GET http://localhost:3001/api/Node_Data/0/'UN.ALTA    345 UALT'
 
 ###
 
-GET http://localhost:3001/api/Node_Data/3/'UN.ALTA    345 UALT'/LMP
+GET http://localhost:3001/api/Node_Data/3/0/2020-07-17 03/2020-07-17 11
 
 ###
 

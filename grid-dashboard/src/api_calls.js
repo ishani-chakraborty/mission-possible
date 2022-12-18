@@ -11,7 +11,10 @@ export async function populateDropdown(list, URI, value, label) {
 
 	// Populate the target list such that AsyncSelect can use it
 	for (let i = 0; i < my_json.length; i++) {
-		if (typeof my_json[i] !== "undefined" && !unique_labels.has(my_json[i][label])) {
+		if (
+			typeof my_json[i] !== "undefined" &&
+			!unique_labels.has(my_json[i][label])
+		) {
 			list.push({
 				value: my_json[i][value],
 				label: my_json[i][label],
@@ -21,12 +24,35 @@ export async function populateDropdown(list, URI, value, label) {
 	}
 }
 
-export async function updateData(setDataFunc, baseCase, scenario, metric, node, startDate, endDate, idToNameFunc) {
+export async function updateData(
+	setDataFunc,
+	baseCase,
+	scenario,
+	metric,
+	node,
+	startDate,
+	endDate,
+	idToNameFunc
+) {
 	// Dynamically determine the query to execute based on how many parameters are specified
+	if (node === null) {
+		node = "0";
+	}
+	let baseCaseURI =
+		"http://localhost:3001/api/Node_Data/" +
+		baseCase +
+		"/'" +
+		node +
+		"'/" +
+		metric;
+	let scenarioURI =
+		"http://localhost:3001/api/Node_Data/" +
+		scenario +
+		"/'" +
+		node +
+		"'/" +
+		metric;
 
-	let baseCaseURI = "http://localhost:3001/api/Node_Data/" + baseCase + "/'" + node + "'/" + metric;
-	let scenarioURI = "http://localhost:3001/api/Node_Data/" + scenario + "/'" + node + "'/" + metric;
-	
 	if (startDate !== null && endDate !== null) {
 		baseCaseURI += "/" + startDate + "/" + endDate;
 		scenarioURI += "/" + startDate + "/" + endDate;
@@ -38,17 +64,17 @@ export async function updateData(setDataFunc, baseCase, scenario, metric, node, 
 	let scenarioData = await response2.json();
 
 	// filter out null values
-	baseCaseData = baseCaseData.filter(entry => entry[metric] !== null);
-	scenarioData = scenarioData.filter(entry => entry[metric] !== null);
+	baseCaseData = baseCaseData.filter((entry) => entry[metric] !== null);
+	scenarioData = scenarioData.filter((entry) => entry[metric] !== null);
 
 	const my_data = {
-		"node"           : node,
-		"metric"         : metric,
-		"base_case_name" : idToNameFunc(baseCase),
-		"scenario_name"  : idToNameFunc(scenario),
-		"base_case"      : baseCaseData,
-		"scenario_to_compare" : scenarioData
-	}
+		node: node,
+		metric: metric,
+		base_case_name: idToNameFunc(baseCase),
+		scenario_name: idToNameFunc(scenario),
+		base_case: baseCaseData,
+		scenario_to_compare: scenarioData,
+	};
 	setDataFunc(my_data);
 
 	// Possible queries, for reference
@@ -61,15 +87,21 @@ export async function updateData(setDataFunc, baseCase, scenario, metric, node, 
 
 // populate metrics
 export async function getMetrics(list) {
-
 	const response = await fetch("http://localhost:3001/api/Node_Data/metrics");
 	const my_json = await response.json();
 
 	var keys = Object.keys(my_json[0]);
 
-	keys
-		.filter(key => !(key === "SCENARIO_ID" || key === "PNODE_NAME" || key === "PERIOD_ID"))
-		.map(metric => list.push({ value: metric.toLowerCase(), label: metric }));
+	keys.filter(
+		(key) =>
+			!(
+				key === "SCENARIO_ID" ||
+				key === "PNODE_NAME" ||
+				key === "PERIOD_ID"
+			)
+	).map((metric) =>
+		list.push({ value: metric.toLowerCase(), label: metric })
+	);
 
 	console.log(list);
 }
