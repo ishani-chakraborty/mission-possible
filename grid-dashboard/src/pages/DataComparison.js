@@ -70,7 +70,7 @@ export default function DataComparison() {
 
 	let metrics = [];
 	let lts = metrics;
-	testdb
+	api_calls
 		.getMetrics(lts)
 		.catch((error) => {
 			console.error(error);
