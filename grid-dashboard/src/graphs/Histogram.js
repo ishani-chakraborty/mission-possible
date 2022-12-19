@@ -4,9 +4,7 @@ import Chart from "react-apexcharts";
 class Histogram extends Component {
 	constructor(props) {
 		super(props);
-		// console.log(props.data)
 
-		// TODO: Get this dynamically using: this.passed_data=props.data
 		// This data in this format is exactly what the graph needs
 		// this.passed_data = {
 		//   metric: 'LMP',
@@ -34,32 +32,35 @@ class Histogram extends Component {
 		let statistics1 = Histogram.getStatistics(this.data1);
 		let statistics2 = Histogram.getStatistics(this.data2);
 		this.statisticsString1 =
-			"Median: " +
-			statistics1.median +
-			" Mean: " +
-			statistics1.mean +
-			" Std Deviation: " +
-			statistics1.std_dev;
+			"Median: " + statistics1.median +
+			" Mean: " + statistics1.mean +
+			" Std Deviation: " + statistics1.std_dev;
 		this.statisticsString2 =
-			"Median: " +
-			statistics2.median +
-			" Mean: " +
-			statistics2.mean +
-			" Std Deviation: " +
-			statistics2.std_dev;
-		this.statisticsString1 = "Median: ";
-		this.statisticsString2 = "Median: ";
+			"Median: " + statistics2.median +
+			" Mean: " + statistics2.mean +
+			" Std Deviation: " + statistics2.std_dev;
 
 		// Create a histogram w/ 10 bins using the min/max of the two lists
 		const numOfBuckets = 10;
-		this.abs_min = Math.min(
-			Math.min(...this.data1),
-			Math.min(...this.data2)
-		);
-		this.abs_max = Math.max(
-			Math.max(...this.data1),
-			Math.max(...this.data2)
-		);
+
+		// Prevents errors on reducing an empty array
+		let min1 = 0;
+		let max1 = 1;
+		let min2 = 0;
+		let max2 = 1;
+
+		if (this.data1.length !== 0) {
+			min1 = this.data1.reduce((a, b) => Math.min(a, b));
+			max1 = this.data1.reduce((a, b) => Math.max(a, b));
+		}
+		if (this.data2.length !== 0) {
+			min2 = this.data2.reduce((a, b) => Math.min(a, b));
+			max2 = this.data2.reduce((a, b) => Math.max(a, b));
+		}
+
+		this.abs_min = Math.min(min1, min2);
+		this.abs_max = Math.min(max1, max2);
+
 		if (this.abs_min === Infinity || this.abs_min === -Infinity) {
 			this.abs_min = 0;
 		}
@@ -67,19 +68,11 @@ class Histogram extends Component {
 			this.abs_max = 1;
 		}
 		this.interval = (this.abs_max - this.abs_min) / numOfBuckets;
-		this.bins1 = Histogram.dataToBins(
-			this.data1,
-			numOfBuckets,
-			this.abs_min,
-			this.abs_max,
-			this.interval
+		this.bins1 = Histogram.dataToBins(this.data1, numOfBuckets,
+			this.abs_min, this.abs_max, this.interval
 		);
-		this.bins2 = Histogram.dataToBins(
-			this.data2,
-			numOfBuckets,
-			this.abs_min,
-			this.abs_max,
-			this.interval
+		this.bins2 = Histogram.dataToBins(this.data2, numOfBuckets,
+			this.abs_min, this.abs_max, this.interval
 		);
 
 		// find the tallest bin (for graph scaling)
@@ -105,14 +98,15 @@ class Histogram extends Component {
 			// id===1 when base case => 1st set of data/statistics
 			// id===2 when scenario to compare
 			let scenario =
-				id === 1
-					? this.passed_data.base_case_name
-					: this.passed_data.scenario_name;
-			let x_title = id === 1 ? "" : this.passed_data.metric; // Only display title on bottom
+				id === 1 ? this.passed_data.base_case_name : this.passed_data.scenario_name;
+			let x_title =
+				id === 1 ? "" : this.passed_data.metric; // Only display title on bottom
 			let stats =
 				id === 1 ? this.statisticsString1 : this.statisticsString2;
-			let color = id === 1 ? "#ff4040" : "#244ae3";
-			let stroke = id === 1 ? "#ee8080" : "#AFDCEC";
+			let color =
+				id === 1 ? "#ff4040" : "#244ae3";
+			let stroke =
+				id === 1 ? "#ee8080" : "#AFDCEC";
 
 			return {
 				chart: {

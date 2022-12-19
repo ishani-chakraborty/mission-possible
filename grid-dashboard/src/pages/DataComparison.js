@@ -1,7 +1,6 @@
 import AsyncSelect from "react-select/async";
 import "./dc_styles.css";
 import { DateRangePicker } from "rsuite";
-// import * as dbInterface from "../DatabaseInterface.js";
 import * as api_calls from "../api_calls.js";
 import Scatter from "../graphs/Scatter";
 import Heatmap from "../graphs/Heatmap";
@@ -14,27 +13,42 @@ export default function DataComparison() {
 
 	// This info is used in the data query
 	const [curStartDate, setStartDate] = useState(null);
-	const [curEndDate, setEndDate] = useState(null);
-	const [curBaseCase, setBaseCase] = useState(null);
-	const [curScenario, setScenario] = useState(null);
-	const [curNode, setNode] = useState(null);
-	const [curMetric, setMetric] = useState(null);
+	const [curEndDate,   setEndDate]   = useState(null);
+	const [curBaseCase,  setBaseCase]  = useState(null);
+	const [curScenario,  setScenario]  = useState(null);
+	const [curNode,      setNode]      = useState(null);
+	const [curMetric,    setMetric]    = useState(null);
 
 	// This info is used for graphing
 	const [curGraph, setGraph] = useState(null);
-	const [curData, setData] = useState(null); // change this to null
-	const default_graph = "scatter";
+	const [curData,  setData]  = useState(null);
+	// const default_graph = "scatter";
+	const default_graph = "histogram";
 
-	// let my_json = [];
-	// fetch("http://localhost:3001/api/Scenarios")
-	// 	.then((response) => response.json())
-	// 	.then((data) => {
-	// 		my_json = data;
-	// 		// console.log(my_json);
-	// 	});
-	// console.log(my_json);
-
+	// Define where we store the data (ex. scenarios stores the ids/names of scenarios)
 	let scenarios = [];
+	let node_names = [];
+	let metrics = [];
+	const graphs = [
+		{ value: "scatter", label: "Scatter" },
+		{ value: "heatmap", label: "Heatmap" },
+		{ value: "histogram", label: "Histogram" },
+	];
+
+	// api_calls
+	// 	.populateDropdown(
+	// 		node_names,
+	// 		"http://localhost:3001/api/Node_Data",
+	// 		"PNODE_NAME",
+	// 		"PNODE_NAME"
+	// 	)
+	// 	.catch((error) => {
+	// 		console.error(error);
+	// 	});
+
+	
+
+	// populate the dropdown lists using the REST api
 	api_calls
 		.populateDropdown(
 			scenarios,
@@ -46,41 +60,22 @@ export default function DataComparison() {
 			console.error(error);
 		});
 
-	let node_names = [];
 	api_calls
-		.populateDropdown(
+		.getNodeNames(
 			node_names,
-			"http://localhost:3001/api/Node_Data",
 			"PNODE_NAME",
 			"PNODE_NAME"
 		)
 		.catch((error) => {
 			console.error(error);
 		});
-
-	// const response = fetch("http://localhost:3001/api/Scenarios");
-	// const my_json = response.json();
-	// console.log(my_json);
-
-	// Define where we store the data (ex. names stores the names of geysers)
-	// let scenario_names = [];
-
-	// let namess = fetch("api/Scenarios");
-	// console.log(namess.json());
-
-	let metrics = [];
-	let lts = metrics;
+	
 	api_calls
-		.getMetrics(lts)
+		.getMetrics(metrics)
 		.catch((error) => {
 			console.error(error);
 		});
 
-	const graphs = [
-		{ value: "scatter", label: "Scatter" },
-		{ value: "heatmap", label: "Heatmap" },
-		{ value: "histogram", label: "Histogram" },
-	];
 
 	const scenarioIdToName = (ID) => {
 		let label = ID;
@@ -91,14 +86,6 @@ export default function DataComparison() {
 		});
 		return label;
 	};
-
-	// populate the dropdown lists
-	// Use a specific REST CALL to get a list of the geysers, saving their names
-	// let query = "/geysers";
-	// let list_to_save_to = scenario_names;
-	// dbInterface.getGeyserInfo(query, list_to_save_to).catch((error) => {
-	// 	console.error(error);
-	// });
 
 	// Search a specific search list (source) for seachValue
 	// Usable by AsyncSelect after specifying the source list
@@ -128,7 +115,7 @@ export default function DataComparison() {
 	};
 
 	const createGraph = async () => {
-		console.log("pushed");
+		// console.log("pushed");
 
 		// Validate that the "base case", "scenario", and "metric" have been chosen
 		let err_msg = "";
@@ -146,7 +133,6 @@ export default function DataComparison() {
 		}
 
 		if (err_msg !== "") {
-			// console.log(err_msg);
 			window.alert(err_msg);
 			return;
 		}
@@ -171,12 +157,10 @@ export default function DataComparison() {
 		// Finally, if the graph isn't visible make sure it is
 		if (curGraph === null) {
 			// make these elements visisble, set the default graph
-			document.getElementsByClassName(
-				"graph_dropdowns"
-			)[0].style.display = "block";
-			document.getElementsByClassName("graph_headers")[0].style.display =
-				"block";
+			document.getElementsByClassName("graph_dropdowns")[0].style.display = "block";
+			document.getElementsByClassName("graph_headers")[0].style.display = "block";
 		}
+		// Create the graph
 		setGraph(default_graph);
 	};
 
@@ -187,21 +171,15 @@ export default function DataComparison() {
 			let end = toGMT(selectedOption[1]);
 			let s =
 				start.getFullYear() +
-				"-" +
-				pad(start.getMonth() + 1) +
-				"-" +
-				pad(start.getDate()) +
-				" " +
-				pad(start.getHours());
+				"-" + pad(start.getMonth() + 1) +
+				"-" + pad(start.getDate()) +
+				" " + pad(start.getHours());
 			let e =
 				end.getFullYear() +
-				"-" +
-				pad(end.getMonth() + 1) +
-				"-" +
-				pad(end.getDate()) +
-				" " +
-				pad(end.getHours());
-			// console.log(s,e);
+				"-" + pad(end.getMonth() + 1) +
+				"-" + pad(end.getDate()) +
+				" " + pad(end.getHours());
+			
 			setStartDate(s);
 			setEndDate(e);
 			console.log(s);
@@ -227,7 +205,7 @@ export default function DataComparison() {
 		<>
 			<h1 className="datacomp">Data Comparison</h1>
 			<hr></hr>
-			<h1 className="config">Configuration</h1>
+			{/* <h1 className="config">Configuration</h1> */}
 			<hr></hr>
 			<ul className="headers">
 				<li>Date</li>

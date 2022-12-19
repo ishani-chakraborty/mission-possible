@@ -6,9 +6,6 @@ export async function populateDropdown(list, URI, value, label) {
 	const my_json = await response.json();
 	const unique_labels = new Set();
 
-	// Get a specific part of the data
-	// console.log(my_json);
-
 	// Populate the target list such that AsyncSelect can use it
 	for (let i = 0; i < my_json.length; i++) {
 		if (
@@ -24,34 +21,42 @@ export async function populateDropdown(list, URI, value, label) {
 	}
 }
 
-export async function updateData(
-	setDataFunc,
-	baseCase,
-	scenario,
-	metric,
-	node,
-	startDate,
-	endDate,
-	idToNameFunc
-) {
+export async function getNodeNames(list, value, label) {
+	let URI = "http://localhost:3001/api/PNODE_NAME";
+
+	// Get the json using the database's REST api
+	const response = await fetch(URI);
+	const my_json = await response.json();
+
+	// Populate the target list such that AsyncSelect can use it
+	// Each entry is already distinct
+	for (let i = 0; i < my_json.length; i++) {
+		if (typeof my_json[i] !== "undefined") {
+			list.push({
+				value: my_json[i][value],
+				label: my_json[i][label],
+			});
+		}
+	}
+}
+
+export async function updateData(setDataFunc, baseCase, scenario,
+	metric, node, startDate, endDate, idToNameFunc) {
+		
 	// Dynamically determine the query to execute based on how many parameters are specified
 	if (node === null) {
 		node = "0";
 	}
 	let baseCaseURI =
-		"http://localhost:3001/api/Node_Data/" +
-		baseCase +
-		"/'" +
-		node +
-		"'/" +
-		metric;
+		"http://localhost:3001/api/Node_Data" +
+		"/" + baseCase +
+		"/'" + node +
+		"'/" + metric;
 	let scenarioURI =
-		"http://localhost:3001/api/Node_Data/" +
-		scenario +
-		"/'" +
-		node +
-		"'/" +
-		metric;
+		"http://localhost:3001/api/Node_Data" +
+		"/" + scenario +
+		"/'" + node +
+		"'/" + metric;
 
 	if (startDate !== null && endDate !== null) {
 		baseCaseURI += "/" + startDate + "/" + endDate;
@@ -77,12 +82,6 @@ export async function updateData(
 	};
 	setDataFunc(my_data);
 
-	// Possible queries, for reference
-	// /:id/:scenario/:pnode_name/:metric/:startdate/:enddate
-	// /:id/:scenario/:pnode_name/        :startdate/:enddate
-	// /:id/:scenario/:pnode_name/:metric
-	// /:id/:scenario/:pnode_name
-	// /:id/:scenario
 }
 
 // populate metrics
@@ -100,8 +99,28 @@ export async function getMetrics(list) {
 				key === "PERIOD_ID"
 			)
 	).map((metric) =>
-		list.push({ value: metric.toLowerCase(), label: metric })
+		list.push({ value: metric, label: metric })
 	);
 
-	console.log(list);
+	// console.log(list);
+}
+
+export async function getStatisticsData(setDataFunc, scenario, metric) {
+	// URI like "/:id/:scenario/:pnode_name/:metric"
+	let URI =
+		"http://localhost:3001/api/Node_Data" +
+		"/" + scenario +
+		"/'0'" +
+		"/" + metric;
+
+	const response = await fetch(URI);
+	let rawData = await response.json();
+
+	let non_null   = rawData.filter((entry) => entry[metric] !== null);
+	let metricData = non_null.map((entry) => parseFloat(entry[metric]));
+	// let finalData  = metricData.filter(((entry) => entry !== null));
+
+	setDataFunc(metricData);
+
+	return metricData;
 }
