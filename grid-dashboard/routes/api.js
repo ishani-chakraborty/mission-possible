@@ -20,6 +20,12 @@ router.get("/:id", (req, res) => {
 		.catch((err) => res.send(err.message));
 });
 
+router.get("/:id/metrics", (req, res) => {
+	pool.query(`SELECT * from "${req.params.id}" LIMIT 1`)
+		.then((result) => res.send(result.rows))
+		.catch((err) => res.send(err.message));
+});
+
 router.get("/:id/:scenario", (req, res) => {
 	if (req.params.id === "Generators") {
 		pool.query(

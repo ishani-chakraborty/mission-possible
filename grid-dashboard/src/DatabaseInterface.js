@@ -20,3 +20,18 @@ export async function getGeyserInfo(URI_extension, list) {
 		list.push({ value: geysers[i].id, label: geysers[i].name });
 	}
 }
+
+// populate metrics
+export async function getMetrics(list) {
+
+	const response = await fetch("http://localhost:3001/api/Node_Data/metrics");
+	const my_json = await response.json();
+
+	var keys = Object.keys(my_json[0]);
+
+	keys
+		.filter(key => !(key === "SCENARIO_ID" || key === "PNODE_NAME" || key === "PERIOD_ID"))
+		.map(metric => list.push({ value: metric.toLowerCase(), label: metric }));
+
+	console.log(list);
+}
