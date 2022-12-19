@@ -4,7 +4,6 @@ import Chart from "react-apexcharts";
 class Scatter extends Component {
 	constructor(props) {
 		super(props);
-		// console.log(props.data)
 
 		// This data in this format is exactly what the graph needs
 		// FYI, the dummy data is hard to read: each entry contains a unique PERIOD_ID with an LMP value, they all have the same node
@@ -62,11 +61,12 @@ class Scatter extends Component {
 			}
 		});
 		// console.log(this.data) // debug, should look like [ [x1, y1], [x2, y2], ..., [xn, yn] ]
+		
+		let max_x = this.data.map((x) => x[0]).reduce((a, b) => Math.max(a, b));
+		let max_y = this.data.map((x) => x[1]).reduce((a, b) => Math.max(a, b));
+		let min_x = this.data.map((x) => x[0]).reduce((a, b) => Math.min(a, b));
+		let min_y = this.data.map((x) => x[1]).reduce((a, b) => Math.min(a, b));
 
-		let max_x = Math.max(...this.data.map((x) => x[0]));
-		let max_y = Math.max(...this.data.map((x) => x[1]));
-		let min_x = Math.min(...this.data.map((x) => x[0]));
-		let min_y = Math.min(...this.data.map((x) => x[1]));
 		let max = Math.max(max_x, max_y);
 		let min = Math.min(min_x, min_y);
 
@@ -91,12 +91,19 @@ class Scatter extends Component {
 			],
 
 			options: {
+				chart: {
+					animations: {
+						enabled: false
+					}
+				},
 				markers: {
-					size: [5, 0],
+					size: [3.5, 0],
+					strokeWidth: 0.75,
 				},
 				xaxis: {
 					type: "numeric",
 					min: min,
+					max: max,
 					tickAmount: 5,
 					labels: {
 						formatter: function (val) {
@@ -164,14 +171,13 @@ class Scatter extends Component {
 				},
 			}, //end options
 		}; //end state
+
 		if (this.data.length > 0) {
 			this.best_fit = Scatter.bestFit(
-				this.data,
-				max_x,
-				max_y,
-				min_x,
-				min_y
+				this.data, max_x, max_y, min_x, min_y
 			);
+
+			// update the set of series'
 			this.state["series"] = [
 				{
 					name: "Datapoints",
@@ -215,8 +221,8 @@ class Scatter extends Component {
 		let m = (avgXY - meanX * meanY) / (avgXSquared - meanX * meanX);
 		let b = m * meanX - meanY;
 
-		console.log(m);
-		console.log(b);
+		// console.log(m);
+		// console.log(b);
 
 		let min = Math.min(min_x, min_y);
 		let max = Math.max(max_x, max_y);
@@ -224,6 +230,8 @@ class Scatter extends Component {
 		// originally [[0, -b], [max_x, m*max_x - b]], but that isn't as nice for graph scaling
 		let p1 = [(min + b) / m, min];
 		let p2 = [(max + b) / m, max];
+		console.log(p1);
+		console.log(p2);
 		return [p1, p2];
 	}
 

@@ -1,5 +1,4 @@
-// This file contains all the defintions needed to interface with the Database using REST api calls
-// It can be imported into any file that needs to use this information, decreasing code duplication
+// OUTDATED FILE: originally used to test await/async integration
 
 // Define the base URI to make it easier to change
 const base_URI = "https://www.geysertimes.org/api/v5";
