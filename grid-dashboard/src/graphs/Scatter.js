@@ -61,15 +61,24 @@ class Scatter extends Component {
 			}
 		});
 		// console.log(this.data) // debug, should look like [ [x1, y1], [x2, y2], ..., [xn, yn] ]
-		
-		let max_x = this.data.map((x) => x[0]).reduce((a, b) => Math.max(a, b));
-		let max_y = this.data.map((x) => x[1]).reduce((a, b) => Math.max(a, b));
-		let min_x = this.data.map((x) => x[0]).reduce((a, b) => Math.min(a, b));
-		let min_y = this.data.map((x) => x[1]).reduce((a, b) => Math.min(a, b));
+
+		// Prevents errors on reducing an empty array
+		let max_x = 1;
+		let max_y = 1;
+		let min_x = 0;
+		let min_y = 0;
+
+		// Prevents errors on reducing an empty array
+		if(this.data.length > 0) {
+			max_x = this.data.map((x) => x[0]).reduce((a, b) => Math.max(a, b));
+			max_y = this.data.map((x) => x[1]).reduce((a, b) => Math.max(a, b));
+			min_x = this.data.map((x) => x[0]).reduce((a, b) => Math.min(a, b));
+			min_y = this.data.map((x) => x[1]).reduce((a, b) => Math.min(a, b));
+		}
 
 		let max = Math.max(max_x, max_y);
 		let min = Math.min(min_x, min_y);
-
+		
 		// best_fit fits the data, ideal_fit is y=x: where the scenario matches up with the base_case
 		this.ideal_fit = [
 			[min, min],

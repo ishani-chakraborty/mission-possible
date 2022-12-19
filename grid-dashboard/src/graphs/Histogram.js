@@ -43,10 +43,20 @@ class Histogram extends Component {
 		// Create a histogram w/ 10 bins using the min/max of the two lists
 		const numOfBuckets = 10;
 
-		let min1 = this.data1.reduce((a, b) => Math.min(a, b));
-		let min2 = this.data2.reduce((a, b) => Math.min(a, b));
-		let max1 = this.data1.reduce((a, b) => Math.max(a, b));
-		let max2 = this.data2.reduce((a, b) => Math.max(a, b));
+		// Prevents errors on reducing an empty array
+		let min1 = 0;
+		let max1 = 1;
+		let min2 = 0;
+		let max2 = 1;
+
+		if (this.data1.length !== 0) {
+			min1 = this.data1.reduce((a, b) => Math.min(a, b));
+			max1 = this.data1.reduce((a, b) => Math.max(a, b));
+		}
+		if (this.data2.length !== 0) {
+			min2 = this.data2.reduce((a, b) => Math.min(a, b));
+			max2 = this.data2.reduce((a, b) => Math.max(a, b));
+		}
 
 		this.abs_min = Math.min(min1, min2);
 		this.abs_max = Math.min(max1, max2);

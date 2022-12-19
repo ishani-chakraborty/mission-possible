@@ -29,29 +29,24 @@ export default function DataComparison() {
 	let scenarios = [];
 	let node_names = [];
 	let metrics = [];
-
-	api_calls
-		.populateDropdown(
-			node_names,
-			"http://localhost:3001/api/Node_Data",
-			"PNODE_NAME",
-			"PNODE_NAME"
-		)
-		.catch((error) => {
-			console.error(error);
-		});
-
-	api_calls
-		.getMetrics(metrics)
-		.catch((error) => {
-			console.error(error);
-		});
-
 	const graphs = [
 		{ value: "scatter", label: "Scatter" },
 		{ value: "heatmap", label: "Heatmap" },
 		{ value: "histogram", label: "Histogram" },
 	];
+
+	// api_calls
+	// 	.populateDropdown(
+	// 		node_names,
+	// 		"http://localhost:3001/api/Node_Data",
+	// 		"PNODE_NAME",
+	// 		"PNODE_NAME"
+	// 	)
+	// 	.catch((error) => {
+	// 		console.error(error);
+	// 	});
+
+	
 
 	// populate the dropdown lists using the REST api
 	api_calls
@@ -65,7 +60,6 @@ export default function DataComparison() {
 			console.error(error);
 		});
 
-	
 	api_calls
 		.getNodeNames(
 			node_names,
@@ -76,7 +70,12 @@ export default function DataComparison() {
 			console.error(error);
 		});
 	
-	
+	api_calls
+		.getMetrics(metrics)
+		.catch((error) => {
+			console.error(error);
+		});
+
 
 	const scenarioIdToName = (ID) => {
 		let label = ID;

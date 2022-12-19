@@ -11,10 +11,6 @@ export default function ScenarioStatistics() {
 	const [curData,     setData]     = useState(null);
 
 	// Define where we store the dropdown data - we only have to collect it once
-	let metrics = [
-		{value: "LMP", label: "LMP"},
-		{value: "MW", label: "MW"},
-	];
 	let filters = [
 		{value: "Period_ID", label: "Period_ID"},
 		{value: "Load Zone", label: "Load Zone"},
@@ -32,6 +28,7 @@ export default function ScenarioStatistics() {
 
 	];
 	let scenario_names = [];
+	let metrics = [];
 
 	// populate the dropdown lists using the REST api
 	api_calls
@@ -41,6 +38,12 @@ export default function ScenarioStatistics() {
 			"SCENARIO_ID",
 			"SCENRAIO_NAME"
 		)
+		.catch((error) => {
+			console.error(error);
+		});
+
+	api_calls
+		.getMetrics(metrics)
 		.catch((error) => {
 			console.error(error);
 		});
@@ -80,16 +83,28 @@ export default function ScenarioStatistics() {
 	};
 
 	const findMean = (arr) => {
-		let sum = arr.reduce((a, b) => a + b);
-		return roundToDec(sum / arr.length, 5);
+		if (arr.length === 0) {
+			return 0;
+		} else {
+			let sum = arr.reduce((a, b) => a + b);
+			return roundToDec(sum / arr.length, 5);
+		}
 	};
 
 	const findMin = (arr) => {
-		return arr.reduce((a, b) => Math.min(a, b));
+		if (arr.length === 0) {
+			return Infinity;
+		} else {
+			return arr.reduce((a, b) => Math.min(a, b));
+		}
 	};
 
 	const findMax = (arr) => {
-		return arr.reduce((a, b) => Math.max(a, b));
+		if (arr.length === 0) {
+			return -Infinity;
+		} else {
+			return arr.reduce((a, b) => Math.max(a, b));
+		}
 	};
 
 	const findMedian = (arr) => {
