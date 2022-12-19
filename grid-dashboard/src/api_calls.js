@@ -99,10 +99,10 @@ export async function getMetrics(list) {
 				key === "PERIOD_ID"
 			)
 	).map((metric) =>
-		list.push({ value: metric.toLowerCase(), label: metric })
+		list.push({ value: metric, label: metric })
 	);
 
-	console.log(list);
+	// console.log(list);
 }
 
 export async function getStatisticsData(setDataFunc, scenario, metric) {

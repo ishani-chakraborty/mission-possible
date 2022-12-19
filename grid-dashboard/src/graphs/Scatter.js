@@ -230,8 +230,6 @@ class Scatter extends Component {
 		// originally [[0, -b], [max_x, m*max_x - b]], but that isn't as nice for graph scaling
 		let p1 = [(min + b) / m, min];
 		let p2 = [(max + b) / m, max];
-		console.log(p1);
-		console.log(p2);
 		return [p1, p2];
 	}
 

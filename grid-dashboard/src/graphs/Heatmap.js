@@ -4,7 +4,7 @@ import Chart from 'react-apexcharts'
 class Heatmap extends Component {
   constructor (props) {
     super(props)
-    console.log(props.data)
+    // console.log(props.data)
 
     this.passed_data = props.data;
     this.metric = this.passed_data.metric;
@@ -83,9 +83,6 @@ class Heatmap extends Component {
       let name = i.toString().padStart(2, '0') // pad with zeros
       my_series.push({name: name, data: this.data[i-1]})
     }
-
-    console.log("My series");
-    console.log(my_series[0]);
 
     this.state = {
             

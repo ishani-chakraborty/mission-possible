@@ -28,10 +28,24 @@ export default function DataComparison() {
 	// Define where we store the data (ex. scenarios stores the ids/names of scenarios)
 	let scenarios = [];
 	let node_names = [];
-	let metrics = [
-		{ value: "LMP", label: "LMP" },
-		{ value: "MW", label: "MW" },
-	];
+	let metrics = [];
+
+	api_calls
+		.populateDropdown(
+			node_names,
+			"http://localhost:3001/api/Node_Data",
+			"PNODE_NAME",
+			"PNODE_NAME"
+		)
+		.catch((error) => {
+			console.error(error);
+		});
+
+	api_calls
+		.getMetrics(metrics)
+		.catch((error) => {
+			console.error(error);
+		});
 
 	const graphs = [
 		{ value: "scatter", label: "Scatter" },
