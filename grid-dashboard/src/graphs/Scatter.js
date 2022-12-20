@@ -29,6 +29,10 @@ class Scatter extends Component {
 		this.passed_data = props.data;
 		this.metric = this.passed_data.metric;
 
+		// Only show this part of the title if the node is valid
+		let temp = " on " + this.passed_data.node
+		this.node_title = (this.passed_data.node == 0) ? "" : temp;
+
 		// transform the base case into a map
 		// {PNODE_Name : {PERIOD_ID : metric} }
 		let nodeDatetimeMap = new Map();
@@ -153,12 +157,14 @@ class Scatter extends Component {
 					},
 				},
 				tooltip: {
-					enabled: false, //keeping track of upto 24hours * 365days * 3years = 26,000 points is likely a performance hit
+					enabled: (this.data.length < 500), //keeping track of so many points is a performance hit and a clutter
+					shared: false,
+					intersect: true,
 				},
 				title: {
 					// TODO: only display the 2nd part of the message if the node is valid
 					text:
-						this.metric + " Comparison on " + this.passed_data.node,
+						this.metric + " Comparison" + this.node_title,
 					align: "left",
 					margin: 10,
 					offsetX: 60,

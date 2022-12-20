@@ -179,6 +179,7 @@ export default function ScenarioStatistics() {
 			document.getElementById("show-buttons").style.display = "block";
 		} else {
 			// Temp solution because its hard to see the update
+			// TODO: switch to a modal window
 			window.alert("Table Updated");
 		}
 

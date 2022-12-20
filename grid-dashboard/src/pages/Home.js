@@ -16,29 +16,49 @@ export default function Home(){
 
      return (
       <div className="home"> Select a way to view the data
-        <div className="buttons">
-             <button className="data" onClick={navigateToDataComparison}>Data Comparison</button>
-             <button className="stats" onClick={navigateToScenarioStatistics}>Scenario Statistics</button>
-        </div> 
-        <div className="descriptions">
-            <div className="description1">
-                <b>Graphical comparisons</b> generated from 
-                <br></br>
-                node input scenarios that perform 
-                <br></br>
-                sanity checks against the base case
-                <br></br> 
-         </div>
-          <div className="description2">
-                <b>Exploratory data analysis</b> using   
-                <br></br>
-                aggregate and target metric filters 
-                <br></br>
-                that sample different values of 
-                <br></br> 
-                node variables 
-           </div> 
-        </div>
+        <table class="center">
+            <tbody>
+                <tr>
+                    <td>
+                        <div className="buttons">
+                            <button className="data" onClick={navigateToDataComparison}>Data Comparison</button>
+                        </div>
+                    </td>
+                    <td>
+                        <div className="buttons">
+                            <button className="stats" onClick={navigateToScenarioStatistics}>Scenario Statistics</button>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div className="descriptions">
+                            <div className="description1">
+                                <b>Graphical comparisons</b> generated from 
+                                <br></br>
+                                node input scenarios that perform 
+                                <br></br>
+                                sanity checks against the base case
+                                <br></br> 
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div className="descriptions">
+                            <div className="description2">
+                                <b>Exploratory data analysis</b> using   
+                                <br></br>
+                                aggregate and target metric filters 
+                                <br></br>
+                                that sample different values of 
+                                <br></br> 
+                                node variables 
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
      </div>
     );
  };

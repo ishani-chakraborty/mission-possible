@@ -17,6 +17,8 @@ class Histogram extends Component {
 		// }
 
 		this.passed_data = props.data ?? [];
+		this.title_addon = (this.passed_data.node != 0) ? ", " + this.passed_data.node : ""
+
 		const getMetric = (entry) => {
 			let val = entry[this.passed_data.metric];
 			return parseFloat(val);
@@ -211,9 +213,7 @@ class Histogram extends Component {
 					text:
 						this.passed_data.metric +
 						" Distribution on " +
-						scenario +
-						", " +
-						this.passed_data.node,
+						scenario + this.title_addon,
 					floating: true,
 					align: "left",
 					margin: 10,

@@ -22,9 +22,12 @@ export default function DataComparison() {
 	// This info is used for graphing
 	const [curGraph, setGraph] = useState(null);
 	const [curData,  setData]  = useState(null);
-	// const default_graph = "scatter";
 	const default_graph = "histogram";
 
+	// Creates a unique key that will signal the app to re-render the graph w/ updated data
+	const [curID,  setID]  = useState(0); 
+
+	
 	// Define where we store the data (ex. scenarios stores the ids/names of scenarios)
 	let scenarios = [];
 	let node_names = [];
@@ -33,20 +36,7 @@ export default function DataComparison() {
 		{ value: "scatter", label: "Scatter" },
 		{ value: "heatmap", label: "Heatmap" },
 		{ value: "histogram", label: "Histogram" },
-	];
-
-	// api_calls
-	// 	.populateDropdown(
-	// 		node_names,
-	// 		"http://localhost:3001/api/Node_Data",
-	// 		"PNODE_NAME",
-	// 		"PNODE_NAME"
-	// 	)
-	// 	.catch((error) => {
-	// 		console.error(error);
-	// 	});
-
-	
+	];	
 
 	// populate the dropdown lists using the REST api
 	api_calls
@@ -125,9 +115,6 @@ export default function DataComparison() {
 		if (curScenario === null) {
 			err_msg += '"Scenario 2" must be specified to generate a graph.\n';
 		}
-		// if (curNode === null) {
-		// 	err_msg += '"Node Name" must be specified to generate a graph.\n';
-		// }
 		if (curMetric === null) {
 			err_msg += '"Metric" must be specified to generate a graph.\n';
 		}
@@ -159,9 +146,11 @@ export default function DataComparison() {
 			// make these elements visisble, set the default graph
 			document.getElementsByClassName("graph_dropdowns")[0].style.display = "block";
 			document.getElementsByClassName("graph_headers")[0].style.display = "block";
+			setGraph(default_graph);
 		}
 		// Create the graph
-		setGraph(default_graph);
+		// setGraph(default_graph);
+		setID(curID + 1);
 	};
 
 	const onChangeDateSelection = (selectedOption) => {
@@ -299,15 +288,15 @@ export default function DataComparison() {
 				View Scatter.js for more details
 			*/}
 			<ul className="scatter">
-				{curGraph === "scatter" && <Scatter data={curData}></Scatter>}
+				{curGraph === "scatter" && <Scatter data={curData} key={curID}></Scatter>}
 			</ul>
 			<ul className="histogram">
 				{curGraph === "histogram" && (
-					<Histogram data={curData}></Histogram>
+					<Histogram data={curData} key={curID}></Histogram>
 				)}
 			</ul>
 			<ul className="heatmap">
-				{curGraph === "heatmap" && <Heatmap data={curData}></Heatmap>}
+				{curGraph === "heatmap" && <Heatmap data={curData} key={curID}></Heatmap>}
 			</ul>
 		</>
 	);

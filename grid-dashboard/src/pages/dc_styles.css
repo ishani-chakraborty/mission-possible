@@ -104,3 +104,7 @@
 	margin: auto;
 	align-items: center;
 }
+
+.apexcharts-xaxistooltip-bottom {
+	display: none;
+}
